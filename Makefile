@@ -10,6 +10,7 @@ IFLAGS = -I./libft
 
 SOURCEFILES = \
 			  src/main.c \
+			  src/arguments/flags.c \
 
 OBJECTS = $(SOURCEFILES:.c=.o)
 NAME = ft_ls
