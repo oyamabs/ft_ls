@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   flags.h                                            :+:      :+:    :+:   */
+/*   arguments.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/04 19:44:01 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/04 22:15:44 by tchampio         ###   ########.fr       */
+/*   Created: 2026/05/04 22:09:33 by tchampio          #+#    #+#             */
+/*   Updated: 2026/05/04 22:09:59 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FLAGS_H
-# define FLAGS_H
+#ifndef ARGUMENTS_H
+# define ARGUMENTS_H
 
-# include "../types.h"
+void	init_arguments(t_arguments *arguments, int ac, char **av);
 
-t_flags	check_flags_arguments(int ac, char **av);
-
-#endif // FLAGS_H
+#endif // ARGUMENTS_H

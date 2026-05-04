@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 19:42:47 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/04 19:46:42 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/05/04 21:22:53 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-void	double_dash_args(char *argv, t_args *args)
+void	double_dash_args(char *argv, t_flags *args)
 {
 	if (!ft_strncmp(argv, "--all", 5))
 		*args |= 1 << ARG_HIDDEN;
@@ -29,13 +29,13 @@ void	double_dash_args(char *argv, t_args *args)
 		*args |= 1 << ARG_REVERSE;
 }
 
-void	single_dash_args(char *argv, t_args *args)
+void	single_dash_args(char *argv, t_flags *args)
 {
 	size_t	arglen;
 	size_t	i;
 
 	arglen = ft_strlen(argv);
-	i = 1;	
+	i = 1;
 	while (i < arglen)
 	{
 		if (argv[i] == 'a')
@@ -52,22 +52,18 @@ void	single_dash_args(char *argv, t_args *args)
 	}
 }
 
-t_args	check_flags_arguments(int ac, char **av)
+t_flags	check_flags_arguments(int ac, char **av)
 {
 	int		current_arg;
-	bool	stop;
-	t_args	args;
+	t_flags	args;
 
 	if (ac == 1)
 		return (0);
 	current_arg = 1;
-	stop = false;
 	args = 0;
-	while (av[current_arg] && !stop)
+	while (av[current_arg])
 	{
-		if (av[current_arg][0] != '-')
-			stop = true;
-		else
+		if (av[current_arg][0] == '-')
 		{
 			if (av[current_arg][1] == '-')
 				double_dash_args(av[current_arg], &args);
