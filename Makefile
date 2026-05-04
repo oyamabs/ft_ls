@@ -9,7 +9,7 @@ endif
 IFLAGS = -I./libft
 
 SOURCEFILES = \
-			  src/ft_ls.c \
+			  src/main.c \
 
 OBJECTS = $(SOURCEFILES:.c=.o)
 NAME = ft_ls
