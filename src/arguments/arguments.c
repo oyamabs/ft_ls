@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 22:05:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/04 22:26:34 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/05/05 14:56:34 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ void	copy_filenames(t_arguments *args, int ac, char **av)
 	int			i;
 	int			j;
 
+	if (args->number_of_files == 0)
+	{
+		args->filenames[0] = ft_strdup(".");
+		args->number_of_files = 1;
+		return ;
+	}
 	i = 1;
 	j = 0;
 	while (i < ac)
