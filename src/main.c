@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/05 17:24:20 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/05/07 16:57:50 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,31 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-void	recursively_explore(DIR *dp, bool *finished_exploring, struct dirent *t)
+void	recursively_explore(DIR *dp, struct dirent *t)
 {
-	if (*finished_exploring)
+	int	scanned_files;
+
+	if (!dp)
 		return ;
-	
 	t = readdir(dp);
-	while (t)
+	if (t == NULL)
+		return ;
+	scanned_files = 1;
+	while (t != NULL)
 	{
+		ft_printf("dirent: %p\ninode: %d\nname: %s\n",t, t->d_ino, t->d_name);
 		t = readdir(dp);
-		ft_printf("dirent: %p\ninode: %s\n",t , t->d_name);
+		scanned_files++;
+		if (t && t->d_type == DT_DIR)
+		{
+			if (scanned_files > 2)
+			{
+				ft_printf("-> Opening directory: %s\n", t->d_name);
+				struct dirent *another = NULL;
+				DIR *ddp = opendir(t->d_name);
+				recursively_explore(ddp, another);
+			}
+		}
 	}
 }
 
@@ -40,11 +55,10 @@ int	main(int argc, char **argv)
 	init_arguments(&args, argc, argv);
 	i = 0;
 	// test opendir
-	DIR *dp = opendir(".");
+	DIR *dp = opendir(args.filenames[0]);
 	ft_printf("Dir pointer: %p\n", dp);
-	bool explore = true;
 	struct dirent *direc = NULL;
-	recursively_explore(dp, &explore, direc);
+	recursively_explore(dp, direc);
 	while (i < args.number_of_files)
 	{
 		printf("%s ", args.filenames[i]);
@@ -53,5 +67,5 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	free(args.filenames);
-	free(dp);
+	closedir(dp);
 }
