@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/07 18:07:53 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/05/18 13:46:01 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,22 @@ void	recursively_explore(DIR *dp, struct dirent *t, const char *name)
 		{
 			if (scanned_files > 2)
 			{
-				//ft_printf("-> Opening directory: %s\n", t->d_name);
 				struct dirent *another = NULL;
 				errno = 0;
 				// strcat for the full path as d_name will not include the real path of the sub sub directory
-				DIR *ddp = opendir(t->d_name);
+				char *name_buffer;
+				name_buffer = ft_calloc(sizeof(char), 1000);
+				ft_strlcat(name_buffer, name, 1000);
+				ft_strlcat(name_buffer, "/", 1000);
+				ft_strlcat(name_buffer, t->d_name, 1000);
+				ft_printf("-> Opening directory: %s\n", name_buffer);
+				DIR *ddp = opendir(name_buffer);
 				if (errno)
 					ft_printf("error: %d, string: %s\n", errno, strerror(errno));
-				recursively_explore(ddp, another, t->d_name);
+				else
+					recursively_explore(ddp, another, name_buffer);
+				closedir(ddp);
+				free(name_buffer);
 			}
 		}
 	}
