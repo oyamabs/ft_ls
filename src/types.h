@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:02:20 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/04 21:58:50 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/05/20 16:21:49 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
                  \ -t
 */
 typedef unsigned short	t_flags;
+
 enum e_argument_flags
 {
 	ARG_RECURSIVE = 0,
@@ -39,5 +40,18 @@ typedef struct s_arguments
 	int		number_of_files;
 	char	**filenames;
 }	t_arguments;
+
+typedef struct s_file
+{
+	char			flags_rights[11];
+	struct dirent	*dirent;
+	char			*points_to; //symlink?
+}	t_file;
+
+typedef struct s_file_tree
+{
+	t_file				*files;
+	struct s_file_tree	*subdirectories;
+}	t_file_tree;
 
 #endif // TYPES_H

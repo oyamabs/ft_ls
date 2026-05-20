@@ -6,11 +6,12 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 15:46:13 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/18 15:51:06 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/05/20 14:21:06 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "explore.h"
+#include "../utils.h"
 
 void	enter_directory(struct dirent *t, const char *name)
 {
@@ -45,6 +46,9 @@ void	recursively_explore(DIR *dp, struct dirent *t, const char *name)
 	{
 		ft_printf("%s\n", t->d_name);
 		t = readdir(dp);
+		t_file f;
+		f.dirent = t;
+		print_file(&f);
 		scanned_files++;
 		if (t && t->d_type == DT_DIR)
 		{

@@ -6,12 +6,13 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/18 15:50:25 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/05/20 14:20:54 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft/includes/libft.h"
 #include "types.h"
+#include "utils.h"
 #include "arguments/arguments.h"
 #include "explore/explore.h"
 #include <stdio.h>

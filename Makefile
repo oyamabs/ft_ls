@@ -10,6 +10,7 @@ IFLAGS = -I./libft
 
 SOURCEFILES = \
 			  src/main.c \
+			  src/utils.c \
 			  src/arguments/flags.c \
 			  src/arguments/arguments.c \
 			  src/explore/explore.c \

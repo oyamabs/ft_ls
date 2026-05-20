@@ -1,24 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   explore.h                                          :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 15:47:30 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/20 12:53:04 by tchampio         ###   ########.fr       */
+/*   Created: 2026/05/20 14:08:28 by tchampio          #+#    #+#             */
+/*   Updated: 2026/05/20 14:09:01 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPLORE_H
-# define EXPLORE_H
+#ifndef UTILS_H
+# define UTILS_H
 
-# include <sys/types.h>
-# include <dirent.h>
-# include "../../libft/includes/libft.h"
-# include <stdlib.h>
+# include "types.h"
 
-void	enter_directory(struct dirent *t, const char *name);
-void	recursively_explore(DIR *dp, struct dirent *t, const char *name);
+void	print_file(t_file *f);
 
-#endif // EXPLORE_H
+#endif // UTILS_H
