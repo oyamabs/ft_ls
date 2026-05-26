@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/20 16:21:48 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/05/26 16:51:28 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 
 void	print_file(t_file *f)
 {
-	if (!f->dirent)
+	if (!f || !f->ent)
 		return ;
-		ft_printf("Info of t_file: %p\nInode: %d\nMode: %d\nRights: %s\nType: %d\nName: %s\n", f, f->dirent->d_ino, f->flags_rights, f->dirent->d_type, f->dirent->d_name);
+	ft_printf("Info of t_file: %p\nInode: %d\nMode: %d\nRights: %s\nType: %d\nName: %s\n", f, f->ent->d_ino, f->ent->d_type,/* f->flags_rights */ "caca",  f->ent->d_type, f->path);
+	ft_printf("THIS IS THE NAME FFS: %s\n", f->path);
 }
 
 /*
@@ -40,22 +41,32 @@ void	print_file(t_file *f)
            S_IXOTH     00001   others have execute permission
 */
 
-void	get_flags(t_file *file)
-{
-	// man stat(3)
-	struct stat *stat;
+// void	get_flags(t_file *file)
+// {
+// 	// man stat(3)
+// 	struct stat *stat;
+// 
+// 	if (stat())
+// }
 
-	if (stat())
-}
-
-t_file	*init_file(struct dirent *dirent)
+t_file	*init_file(struct dirent *dirent, const char *path)
 {
 	t_file	*to_return;
+	char	*tmp;
 
+	if (!dirent)
+		return (NULL);
 	to_return = malloc(sizeof(*to_return));
 	if (!to_return)
 		return (NULL);
-	to_return->dirent = dirent;
-	get_flags(to_return);
+	to_return->ent = dirent;
+	tmp = ft_calloc(sizeof(char), 1000);
+	ft_strlcat(tmp, path, 1000);
+	ft_strlcat(tmp, "/", 1000);
+	ft_strlcat(tmp, dirent->d_name, 1000);
+	to_return->path = ft_strdup(tmp);
+	free(tmp);
+
+	//get_flags(to_return);
 	return (to_return);
 }
