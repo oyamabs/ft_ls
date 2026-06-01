@@ -6,20 +6,23 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/26 16:51:28 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/01 17:42:04 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
 #include <dirent.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "../libft/includes/libft.h"
 
 void	print_file(t_file *f)
 {
 	if (!f || !f->ent)
 		return ;
-	ft_printf("Info of t_file: %p\nInode: %d\nMode: %d\nRights: %s\nType: %d\nName: %s\n", f, f->ent->d_ino, f->ent->d_type,/* f->flags_rights */ "caca",  f->ent->d_type, f->path);
-	ft_printf("THIS IS THE NAME FFS: %s\n", f->path);
+	ft_printf("Info of t_file: %p\nInode: %d\nMode: %d\nRights: %s\nType: %d\nName: %s\n", f, f->ent->d_ino, f->ent->d_type, f->flags_rights,  f->ent->d_type, f->path);
 }
 
 /*
@@ -41,13 +44,53 @@ void	print_file(t_file *f)
            S_IXOTH     00001   others have execute permission
 */
 
-// void	get_flags(t_file *file)
-// {
-// 	// man stat(3)
-// 	struct stat *stat;
-// 
-// 	if (stat())
-// }
+char		get_file_type(int mode)
+{
+	mode = (mode & S_IFMT);
+	if (S_ISREG(mode))
+		return ('-');
+	else if (S_ISDIR(mode))
+		return ('d');
+	else if (S_ISLNK(mode))
+		return ('l');
+	else if (S_ISBLK(mode))
+		return ('b');
+	else if (S_ISCHR(mode))
+		return ('c');
+	else if (S_ISSOCK(mode))
+		return ('s');
+	else if (S_ISFIFO(mode))
+		return ('p');
+	else
+		return ('-');
+}
+
+
+void	get_flags(t_file *file)
+{
+	// man stat(2)
+	struct stat *statbuf;
+	int			mode;
+
+	statbuf = malloc(sizeof(*statbuf));
+	if (stat(file->path, statbuf) < 0)
+	{
+		perror("ft_ls");
+		return ;
+	}
+	mode = statbuf->st_mode;
+	file->flags_rights[0] = get_file_type(mode);
+	file->flags_rights[1] = (S_IRUSR & mode) ? 'r' : '-';
+	file->flags_rights[2] = (S_IWUSR & mode) ? 'w' : '-';
+	file->flags_rights[3] = (S_IXUSR & mode) ? 'x' : '-';
+	file->flags_rights[4] = (S_IRGRP & mode) ? 'r' : '-';
+	file->flags_rights[5] = (S_IWGRP & mode) ? 'w' : '-';
+	file->flags_rights[6] = (S_IXGRP & mode) ? 'x' : '-';
+	file->flags_rights[7] = (S_IROTH & mode) ? 'r' : '-';
+	file->flags_rights[8] = (S_IWOTH & mode) ? 'w' : '-';
+	file->flags_rights[9] = (S_IXOTH & mode) ? 'x' : '-';
+	file->flags_rights[10] = '\0';
+}
 
 t_file	*init_file(struct dirent *dirent, const char *path)
 {
@@ -66,7 +109,7 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 	ft_strlcat(tmp, dirent->d_name, 1000);
 	to_return->path = ft_strdup(tmp);
 	free(tmp);
-
-	//get_flags(to_return);
+	ft_bzero(to_return->flags_rights, 12);
+	get_flags(to_return);
 	return (to_return);
 }
