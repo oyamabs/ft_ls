@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/01 17:42:04 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/01 18:18:58 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	print_file(t_file *f)
 {
 	if (!f || !f->ent)
 		return ;
-	ft_printf("Info of t_file: %p\nInode: %d\nMode: %d\nRights: %s\nType: %d\nName: %s\n", f, f->ent->d_ino, f->ent->d_type, f->flags_rights,  f->ent->d_type, f->path);
+	//ft_printf("Info of t_file: %p\nInode: %d\nMode: %d\nRights: %s\nType: %d\nName: %s\n", f, f->ent->d_ino, f->ent->d_type, f->flags_rights,  f->ent->d_type, f->path);
+	ft_printf("%s %d %s %s %d %d %d %d:%d %s\n", f->flags_rights, 420, "caca", "prout", 69, "Pet", 1, 20, 9, f->ent->d_name);
 }
 
 /*
