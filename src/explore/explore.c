@@ -15,7 +15,7 @@
 
 t_file	*init_file(struct dirent *dirent, const char *path); // FIXME: delete this line
 
-void	enter_directory(struct dirent *t, const char *name)
+void	enter_directory(struct dirent *t, const char *name, t_file_tree *current)
 {
 	char			*name_buffer;
 	int				errno;
@@ -30,12 +30,18 @@ void	enter_directory(struct dirent *t, const char *name)
 	ft_strlcat(name_buffer, t->d_name, 1000);
 	ddp = opendir(name_buffer);
 	if (!errno)
-		recursively_explore(ddp, another, name_buffer);
+	{
+		t_file_tree	*new_branch;
+		new_branch = ft_calloc(sizeof(*new_branch), 1);
+		t_list *elem = ft_lstnew((t_file_tree *)new_branch);
+		ft_lstadd_back(&(current->subdirectories), elem);
+		recursively_explore(ddp, another, name_buffer, new_branch);
+	}
 	closedir(ddp);
 	free(name_buffer);
 }
 
-void	recursively_explore(DIR *dp, struct dirent *t, const char *name)
+void	recursively_explore(DIR *dp, struct dirent *t, const char *name, t_file_tree *branch)
 {
 	int				scanned_files;
 
@@ -49,12 +55,14 @@ void	recursively_explore(DIR *dp, struct dirent *t, const char *name)
 		t = readdir(dp);
 		t_file *f = NULL;
 		f = init_file(t, name);
-		print_file(f);
+		// print_file(f);
 		scanned_files++;
 		if (t && t->d_type == DT_DIR)
 		{
 			if (scanned_files > 2)
-				enter_directory(t, name);
+				enter_directory(t, name, branch);
 		}
+		else
+			ft_lstadd_back(&(branch->files), ft_lstnew(f));
 	}
 }

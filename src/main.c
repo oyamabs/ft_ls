@@ -33,10 +33,11 @@ int	main(int argc, char **argv)
 	dp = opendir(args.filenames[0]);
 	ft_printf("Dir pointer: %p\n", dp);
 	direc = NULL;
-	recursively_explore(dp, direc, args.filenames[0]);
+	t_file_tree	tree = { 0 };
+	recursively_explore(dp, direc, args.filenames[0], &tree);
 	while (i < args.number_of_files)
 	{
-		printf("%s ", args.filenames[i]);
+		//ft_printf("%s ", args.filenames[i]);
 		if (args.filenames[i])
 			free(args.filenames[i]);
 		i++;

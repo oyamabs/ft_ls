@@ -17,8 +17,9 @@
 # include <dirent.h>
 # include "../../libft/includes/libft.h"
 # include <stdlib.h>
+# include "../types.h"
 
-void	enter_directory(struct dirent *t, const char *name);
-void	recursively_explore(DIR *dp, struct dirent *t, const char *name);
+void	enter_directory(struct dirent *t, const char *name, t_file_tree *tree);
+void	recursively_explore(DIR *dp, struct dirent *t, const char *name, t_file_tree *tree);
 
 #endif // EXPLORE_H

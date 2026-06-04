@@ -13,6 +13,8 @@
 #ifndef TYPES_H
 # define TYPES_H
 
+# include "../libft/includes/libft.h"
+
 /*
     t_flags binary definition
     0000.0000 0001.0100
@@ -51,8 +53,8 @@ typedef struct s_file
 
 typedef struct s_file_tree
 {
-	t_file				*files;
-	struct s_file_tree	*subdirectories;
+	t_list				*files;
+	t_list				*subdirectories;
 }	t_file_tree;
 
 #endif // TYPES_H
