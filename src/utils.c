@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/01 18:18:58 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/04 18:45:03 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,29 @@
 #include <unistd.h>
 #include "../libft/includes/libft.h"
 
-void	print_file(t_file *f)
+void	print_file(void *file)
 {
+	t_file	*f;
+
+	f = (t_file *)file;
 	if (!f || !f->ent)
 		return ;
 	//ft_printf("Info of t_file: %p\nInode: %d\nMode: %d\nRights: %s\nType: %d\nName: %s\n", f, f->ent->d_ino, f->ent->d_type, f->flags_rights,  f->ent->d_type, f->path);
 	ft_printf("%s %d %s %s %d %d %d %d:%d %s\n", f->flags_rights, 420, "caca", "prout", 69, "Pet", 1, 20, 9, f->ent->d_name);
+}
+
+void	print_tree(t_file_tree *tree)
+{
+	t_file_tree	*current;
+	bool		end_tree;
+	t_file		*current_file;
+
+	end_tree = false;
+	current = tree;
+	while (!end_tree || current)
+	{
+		ft_lstiter(current->files, print_file);
+	}
 }
 
 /*
