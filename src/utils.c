@@ -138,10 +138,16 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 
 	if (!dirent)
 		return (NULL);
-	to_return = malloc(sizeof(*to_return));
+	to_return = ft_calloc(sizeof(*to_return), 1);
 	if (!to_return)
 		return (NULL);
-	to_return->ent = dirent;
+	to_return->ent = ft_calloc(sizeof(struct dirent), 1);
+	if (!to_return->ent)
+	{
+		free(to_return);
+		return (NULL);
+	}
+	to_return->ent = ft_memcpy(to_return->ent, dirent, sizeof(*dirent));
 	tmp = ft_calloc(sizeof(char), 1000);
 	ft_strlcat(tmp, path, 1000);
 	ft_strlcat(tmp, "/", 1000);

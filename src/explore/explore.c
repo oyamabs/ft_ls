@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 15:46:13 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/04 17:25:01 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/15 15:04:13 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,21 @@ void	enter_directory(struct dirent *t, const char *name, t_file_tree *current)
 
 void	recursively_explore(DIR *dp, struct dirent *t, const char *name, t_file_tree *branch)
 {
-	int				scanned_files;
-
-	if (!dp)
+	if (!dp || !branch)
 		return ;
 	ft_printf("exploring: %s\n", name);
-	t = readdir(dp);
-	scanned_files = 1;
-	while (t != NULL)
+	while ((t = readdir(dp)) != NULL)
 	{
-		t = readdir(dp);
+		if (ft_strncmp(t->d_name, ".", 2) == 0 || ft_strncmp(t->d_name, "..", 3) == 0)
+			continue ;
 		t_file *f = NULL;
 		f = init_file(t, name);
-		// print_file(f);
-		scanned_files++;
-		if (t && t->d_type == DT_DIR)
+		if (!f)
+			break ;
+		if (t->d_type == DT_DIR)
 		{
-			if (scanned_files > 2)
-				enter_directory(t, name, branch);
+			ft_lstadd_back(&(branch->files), ft_lstnew(f));
+			enter_directory(t, name, branch);
 		}
 		else
 			ft_lstadd_back(&(branch->files), ft_lstnew(f));
