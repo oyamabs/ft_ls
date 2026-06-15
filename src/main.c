@@ -6,20 +6,18 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/04 16:04:19 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/15 14:54:05 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft/includes/libft.h"
 #include "types.h"
-#include "utils.h"
 #include "arguments/arguments.h"
 #include "explore/explore.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <errno.h>
 #include <string.h>
+#include "utils.h"
 
 int	main(int argc, char **argv)
 {
@@ -42,6 +40,7 @@ int	main(int argc, char **argv)
 			free(args.filenames[i]);
 		i++;
 	}
+	print_file_tree(&tree, 0);
 	free(args.filenames);
 	closedir(dp);
 }

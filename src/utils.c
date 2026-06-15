@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/04 18:45:03 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/15 15:44:36 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,39 @@ void	print_file(void *file)
 	ft_printf("%s %d %s %s %d %d %d %d:%d %s\n", f->flags_rights, 420, "caca", "prout", 69, "Pet", 1, 20, 9, f->ent->d_name);
 }
 
-void	print_tree(t_file_tree *tree)
+void print_file_tree(t_file_tree *tree, int level)
 {
-	t_file_tree	*current;
-	bool		end_tree;
-	t_file		*current_file;
+    if (!tree)
+        return;
 
-	end_tree = false;
-	current = tree;
-	while (!end_tree || current)
-	{
-		ft_lstiter(current->files, print_file);
-	}
+    t_list *current_file = tree->files;
+    while (current_file != NULL)
+    {
+        t_file *file = (t_file *)current_file->content;
+        if (file && file->ent)
+        {
+            for (int i = 0; i < level; i++)
+                printf("    ");
+            if (file->points_to)
+                printf("📄 %s -> %s\n", file->ent->d_name, file->points_to);
+            else
+                printf("📄 %s\n", file->ent->d_name);
+        }
+        current_file = current_file->next;
+    }
+    t_list *current_sub = tree->subdirectories;
+    while (current_sub != NULL)
+    {
+        t_file_tree *subtree = (t_file_tree *)current_sub->content;
+        if (subtree)
+        {
+            for (int i = 0; i < level; i++)
+                printf("    ");
+            printf("📁 [Dossier]:\n");
+            print_file_tree(subtree, level + 1);
+        }
+        current_sub = current_sub->next;
+    }
 }
 
 /*
