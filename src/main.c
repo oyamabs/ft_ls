@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/16 14:35:29 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/16 15:32:23 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,47 @@ void	sort_entries_alpha(t_list *files)
 	} while (swapped == true);
 }
 
+void	sort_entries_reverse(t_list *files)
+{
+	bool	swapped;
+	t_list	*ptr1;
+
+	if (!files)
+		return ;
+	do
+	{
+		swapped = false;
+		ptr1 = files;
+		while (ptr1->next != NULL)
+		{
+			if (compare_ascii(ptr1->content, ptr1->next->content) < 0)
+			{
+				t_file *tmp = (t_file *)ptr1->content;
+				ptr1->content = ptr1->next->content;
+				ptr1->next->content = tmp;
+				swapped = true;
+			}
+			ptr1 = ptr1->next;
+		}
+	} while (swapped == true);
+}
+
+void	sort_tree(t_file_tree *tree)
+{
+	if (!tree)
+		return ;
+	t_list *current_files = tree->files;
+	sort_entries_reverse(current_files);
+	t_list *current_branch = tree->subdirectories;
+	while (current_branch != NULL)
+	{
+		t_file_tree *sub_tree = current_branch->content;
+		sort_tree(sub_tree);
+		current_branch = current_branch->next;
+	}
+}
+
+
 int	main(int argc, char **argv)
 {
 	int				i;
@@ -73,7 +114,7 @@ int	main(int argc, char **argv)
 			free(args.filenames[i]);
 		i++;
 	}
-	sort_entries_alpha(tree.files);
+	sort_tree(&tree);
 	print_file_tree(&tree, 0);
 	free(args.filenames);
 	closedir(dp);
