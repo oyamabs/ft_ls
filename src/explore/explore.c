@@ -6,14 +6,12 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 15:46:13 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/15 15:04:13 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/16 14:21:25 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "explore.h"
 #include "../utils.h"
-
-t_file	*init_file(struct dirent *dirent, const char *path); // FIXME: delete this line
 
 void	enter_directory(struct dirent *t, const char *name, t_file_tree *current)
 {
@@ -47,10 +45,13 @@ void	recursively_explore(DIR *dp, struct dirent *t, const char *name, t_file_tre
 	ft_printf("exploring: %s\n", name);
 	while ((t = readdir(dp)) != NULL)
 	{
-		if (ft_strncmp(t->d_name, ".", 2) == 0 || ft_strncmp(t->d_name, "..", 3) == 0)
-			continue ;
 		t_file *f = NULL;
 		f = init_file(t, name);
+		if (ft_strncmp(t->d_name, ".", 2) == 0 || ft_strncmp(t->d_name, "..", 3) == 0)
+		{
+			ft_lstadd_back(&(branch->files), ft_lstnew(f));
+			continue ;
+		}
 		if (!f)
 			break ;
 		if (t->d_type == DT_DIR)
