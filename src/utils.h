@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 14:08:28 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/15 14:53:58 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/16 13:27:54 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "types.h"
 
+t_file	*init_file(struct dirent *dirent, const char *path);
 void	print_file(t_file *f);
 void	print_file_tree(t_file_tree *tree, int level);
 
