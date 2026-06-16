@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/16 15:32:23 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/16 15:36:31 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	sort_tree(t_file_tree *tree)
 	if (!tree)
 		return ;
 	t_list *current_files = tree->files;
-	sort_entries_reverse(current_files);
+	sort_entries_alpha(current_files);
 	t_list *current_branch = tree->subdirectories;
 	while (current_branch != NULL)
 	{
