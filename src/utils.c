@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/16 15:38:18 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/16 16:00:28 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ void	get_flags(t_file *file)
 	file->flags_rights[8] = (S_IWOTH & mode) ? 'w' : '-';
 	file->flags_rights[9] = (S_IXOTH & mode) ? 'x' : '-';
 	file->flags_rights[10] = '\0';
+	free(statbuf);
 }
 
 t_file	*init_file(struct dirent *dirent, const char *path)
