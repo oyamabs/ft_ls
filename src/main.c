@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/15 14:54:05 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/16 14:35:29 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,39 @@
 #include <stdbool.h>
 #include <string.h>
 #include "utils.h"
+
+int	compare_ascii(void *content_a, void *content_b)
+{
+	t_file	*a = (t_file *)content_a;
+	t_file	*b = (t_file *)content_b;
+
+	return (ft_strncmp(a->ent->d_name, b->ent->d_name, 256));
+}
+
+void	sort_entries_alpha(t_list *files)
+{
+	bool	swapped;
+	t_list	*ptr1;
+
+	if (!files)
+		return ;
+	do
+	{
+		swapped = false;
+		ptr1 = files;
+		while (ptr1->next != NULL)
+		{
+			if (compare_ascii(ptr1->content, ptr1->next->content) > 0)
+			{
+				t_file *tmp = (t_file *)ptr1->content;
+				ptr1->content = ptr1->next->content;
+				ptr1->next->content = tmp;
+				swapped = true;
+			}
+			ptr1 = ptr1->next;
+		}
+	} while (swapped == true);
+}
 
 int	main(int argc, char **argv)
 {
@@ -40,6 +73,7 @@ int	main(int argc, char **argv)
 			free(args.filenames[i]);
 		i++;
 	}
+	sort_entries_alpha(tree.files);
 	print_file_tree(&tree, 0);
 	free(args.filenames);
 	closedir(dp);
