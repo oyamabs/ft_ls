@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/15 15:44:36 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/16 15:38:18 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ void print_file_tree(t_file_tree *tree, int level)
         if (file && file->ent)
         {
             for (int i = 0; i < level; i++)
-                printf("    ");
+                ft_printf("    ");
             if (file->points_to)
-                printf("📄 %s -> %s\n", file->ent->d_name, file->points_to);
+                ft_printf("📄 %s -> %s\n", file->ent->d_name, file->points_to);
             else
-                printf("📄 %s\n", file->ent->d_name);
+                ft_printf("📄 %s\n", file->ent->d_name);
         }
         current_file = current_file->next;
     }
@@ -56,8 +56,8 @@ void print_file_tree(t_file_tree *tree, int level)
         if (subtree)
         {
             for (int i = 0; i < level; i++)
-                printf("    ");
-            printf("📁 [Dossier]:\n");
+                ft_printf("    ");
+            ft_printf("📁 [Dossier]:\n");
             print_file_tree(subtree, level + 1);
         }
         current_sub = current_sub->next;
