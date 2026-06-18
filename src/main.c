@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/16 16:23:43 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/18 13:47:08 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,16 @@ void	free_file(void *file)
 	t_file *f = (t_file *)file;
 	free(f->ent);
 	free(f->path);
+	free(f);
 }
 
 void	free_tree(t_file_tree *tree)
 {
 	if (!tree)
 		return ;
+	t_list *current_files = tree->files;
+	ft_lstclear(&current_files, free_file);
+	free(current_files);
 	t_list *current_branch = tree->subdirectories;
 	while (current_branch != NULL)
 	{
@@ -110,9 +114,7 @@ void	free_tree(t_file_tree *tree)
 		free_tree(sub_tree);
 		current_branch = current_branch->next;
 	}
-	t_list *current_files = tree->files;
-	ft_lstclear(&current_files, free_file);
-	free(current_files);
+	ft_lstclear(&tree->subdirectories, free);
 }
 
 
