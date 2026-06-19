@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 14:10:46 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/19 16:00:23 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,44 +25,9 @@ void	print_file(void *file)
 	f = (t_file *)file;
 	if (!f || !f->ent)
 		return ;
-	//ft_printf("Info of t_file: %p\nInode: %d\nMode: %d\nRights: %s\nType: %d\nName: %s\n", f, f->ent->d_ino, f->ent->d_type, f->flags_rights,  f->ent->d_type, f->path);
 	ft_printf("%s %d %s %s %d %d %d %d:%d %s\n", f->flags_rights, 420, "caca", "prout", 69, "Pet", 1, 20, 9, f->ent->d_name);
 }
 
-// void print_file_tree(t_file_tree *tree, int level)
-// {
-//     if (!tree)
-//         return;
-// 
-//     t_list *current_file = tree->files;
-//     while (current_file != NULL)
-//     {
-//         t_file *file = (t_file *)current_file->content;
-//         if (file && file->ent)
-//         {
-//             for (int i = 0; i < level; i++)
-//                 ft_printf("    ");
-//             if (file->points_to)
-//                 ft_printf("📄 %s -> %s\n", file->ent->d_name, file->points_to);
-//             else
-//                 ft_printf("📄 %s\n", file->ent->d_name);
-//         }
-//         current_file = current_file->next;
-//     }
-//     t_list *current_sub = tree->subdirectories;
-//     while (current_sub != NULL)
-//     {
-//         t_file_tree *subtree = (t_file_tree *)current_sub->content;
-//         if (subtree)
-//         {
-//             for (int i = 0; i < level; i++)
-//                 ft_printf("    ");
-//             ft_printf("📁 [Dossier: %s]:\n", subtree->path);
-//             print_file_tree(subtree, level + 1);
-//         }
-//         current_sub = current_sub->next;
-//     }
-// }
 void print_file_tree(t_file_tree *tree, int level)
 {
     if (!tree)
@@ -72,20 +37,14 @@ void print_file_tree(t_file_tree *tree, int level)
     while (current_file != NULL)
     {
         t_file *file = (t_file *)current_file->content;
-        // On retire la condition stricte '&& file->ent' pour accepter les fichiers directs
         if (file)
         {
-            // Indentation
             for (int i = 0; i < level; i++)
                 ft_printf("    ");
-
-            // Détermination du nom à afficher : d_name si dispo, sinon le path direct
-            char *name_to_print = (file->ent) ? file->ent->d_name : file->path;
-
             if (file->points_to)
-                ft_printf("📄 %s -> %s\n", name_to_print, file->points_to);
+                ft_printf("📄 %s -> %s\n", file->path, file->points_to);
             else
-                ft_printf("📄 %s\n", name_to_print);
+                ft_printf("📄 %s\n", file->path);
         }
         current_file = current_file->next;
     }

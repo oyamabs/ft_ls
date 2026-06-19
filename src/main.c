@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 15:48:37 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/19 16:09:36 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ int	main(int argc, char **argv)
 			i++;
 			continue ;
 		}
-		ft_printf("Dir pointer: %p\n", dps[i]);
 		direc = NULL;
 		recursively_explore(dps[i], direc, args.filenames[i], current_tree);
 		i++;
