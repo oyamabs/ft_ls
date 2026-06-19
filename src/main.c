@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 12:47:15 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/19 13:53:37 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,21 +104,28 @@ int	main(int argc, char **argv)
 	init_arguments(&args, argc, argv);
 	i = 0;
 	trees = ft_calloc(sizeof(*trees), args.number_of_files);
+	if (!trees)
+		return 1;
 	dps = ft_calloc(sizeof(*dps), args.number_of_files);
+	if (!dps)
+		return (free(trees), 1);
 	while (i < args.number_of_files)
 	{
 		dps[i] = opendir(args.filenames[i]);
+		trees[i] = ft_calloc(sizeof(*trees[i]), 1);
+		if (!trees[i])
+			exit(1); // dangerous ! OOOoooohhh! 👻👻👻
+		t_file_tree *current_tree = trees[i];
 		if (!dps[i])
 		{
+			t_file *individual_file = init_file(NULL, args.filenames[i]);
+			ft_lstadd_back(&(current_tree->files), ft_lstnew((t_file *)individual_file));
 			i++;
 			continue ;
 		}
-		trees[i] = ft_calloc(sizeof(*trees[i]), 1);
-		if (!trees[i])
-			exit(1);
 		ft_printf("Dir pointer: %p\n", dps[i]);
 		direc = NULL;
-		recursively_explore(dps[i], direc, args.filenames[i], trees[i]);
+		recursively_explore(dps[i], direc, args.filenames[i], current_tree);
 		i++;
 	}
 	i = 0;
@@ -133,6 +140,7 @@ int	main(int argc, char **argv)
 	while (i < args.number_of_files)
 	{
 		sort_tree(trees[i]);
+		ft_printf("%p\n", trees[i]);
 		print_file_tree(trees[i], 0);
 		i++;
 	}
@@ -141,6 +149,7 @@ int	main(int argc, char **argv)
 	while (i < args.number_of_files)
 	{
 		free_tree(trees[i]);
+		free(trees[i]);
 		if (dps[i])
 			closedir(dps[i]);
 		i++;

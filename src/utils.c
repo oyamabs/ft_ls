@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 12:35:22 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/19 13:54:54 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,40 @@ void	print_file(void *file)
 	ft_printf("%s %d %s %s %d %d %d %d:%d %s\n", f->flags_rights, 420, "caca", "prout", 69, "Pet", 1, 20, 9, f->ent->d_name);
 }
 
+// void print_file_tree(t_file_tree *tree, int level)
+// {
+//     if (!tree)
+//         return;
+// 
+//     t_list *current_file = tree->files;
+//     while (current_file != NULL)
+//     {
+//         t_file *file = (t_file *)current_file->content;
+//         if (file && file->ent)
+//         {
+//             for (int i = 0; i < level; i++)
+//                 ft_printf("    ");
+//             if (file->points_to)
+//                 ft_printf("📄 %s -> %s\n", file->ent->d_name, file->points_to);
+//             else
+//                 ft_printf("📄 %s\n", file->ent->d_name);
+//         }
+//         current_file = current_file->next;
+//     }
+//     t_list *current_sub = tree->subdirectories;
+//     while (current_sub != NULL)
+//     {
+//         t_file_tree *subtree = (t_file_tree *)current_sub->content;
+//         if (subtree)
+//         {
+//             for (int i = 0; i < level; i++)
+//                 ft_printf("    ");
+//             ft_printf("📁 [Dossier: %s]:\n", subtree->path);
+//             print_file_tree(subtree, level + 1);
+//         }
+//         current_sub = current_sub->next;
+//     }
+// }
 void print_file_tree(t_file_tree *tree, int level)
 {
     if (!tree)
@@ -38,17 +72,24 @@ void print_file_tree(t_file_tree *tree, int level)
     while (current_file != NULL)
     {
         t_file *file = (t_file *)current_file->content;
-        if (file && file->ent)
+        // On retire la condition stricte '&& file->ent' pour accepter les fichiers directs
+        if (file)
         {
+            // Indentation
             for (int i = 0; i < level; i++)
                 ft_printf("    ");
+
+            // Détermination du nom à afficher : d_name si dispo, sinon le path direct
+            char *name_to_print = (file->ent) ? file->ent->d_name : file->path;
+
             if (file->points_to)
-                ft_printf("📄 %s -> %s\n", file->ent->d_name, file->points_to);
+                ft_printf("📄 %s -> %s\n", name_to_print, file->points_to);
             else
-                ft_printf("📄 %s\n", file->ent->d_name);
+                ft_printf("📄 %s\n", name_to_print);
         }
         current_file = current_file->next;
     }
+
     t_list *current_sub = tree->subdirectories;
     while (current_sub != NULL)
     {
@@ -129,16 +170,18 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 	t_file	*to_return;
 	char	*tmp;
 
-	if (!dirent)
-		return (NULL);
 	to_return = ft_calloc(sizeof(*to_return), 1);
 	if (!to_return)
 		return (NULL);
-	to_return->ent = ft_calloc(sizeof(struct dirent), 1);
-	if (!to_return->ent)
+	if (dirent)
 	{
-		free(to_return);
-		return (NULL);
+		to_return->ent = ft_calloc(sizeof(struct dirent), 1);
+		if (!to_return->ent)
+		{
+			free(to_return);
+			return (NULL);
+		}
+		to_return->ent = ft_memcpy(to_return->ent, dirent, sizeof(*dirent));
 	}
 	to_return->statbuf = ft_calloc(sizeof(struct stat), 1);
 	if (!to_return->statbuf)
@@ -147,8 +190,6 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 		free(to_return);
 		return (NULL);
 	}
-	if (dirent)
-		to_return->ent = ft_memcpy(to_return->ent, dirent, sizeof(*dirent));
 	int lstatres = lstat(path, to_return->statbuf);
 	if (lstatres < 0)
 	{
@@ -157,12 +198,17 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 		free(to_return);
 		return (NULL);
 	}
-	tmp = ft_calloc(sizeof(char), 1000);
-	ft_strlcat(tmp, path, 1000);
-	ft_strlcat(tmp, "/", 1000);
-	ft_strlcat(tmp, dirent->d_name, 1000);
-	to_return->path = ft_strdup(tmp);
-	free(tmp);
+	if (dirent)
+	{
+		tmp = ft_calloc(sizeof(char), 1000);
+		ft_strlcat(tmp, path, 1000);
+		ft_strlcat(tmp, "/", 1000);
+		ft_strlcat(tmp, dirent->d_name, 1000);
+		to_return->path = ft_strdup(tmp);
+		free(tmp);
+	}
+	else
+		to_return->path = ft_strdup(path);
 	ft_bzero(to_return->flags_rights, 12);
 	get_flags(to_return);
 	return (to_return);
