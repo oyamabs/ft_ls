@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/16 16:00:28 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/19 12:35:22 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void print_file_tree(t_file_tree *tree, int level)
         {
             for (int i = 0; i < level; i++)
                 ft_printf("    ");
-            ft_printf("📁 [Dossier]:\n");
+            ft_printf("📁 [Dossier: %s]:\n", subtree->path);
             print_file_tree(subtree, level + 1);
         }
         current_sub = current_sub->next;
