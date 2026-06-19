@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 13:54:54 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/19 13:57:07 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,15 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 			return (NULL);
 		}
 		to_return->ent = ft_memcpy(to_return->ent, dirent, sizeof(*dirent));
+		tmp = ft_calloc(sizeof(char), 1000);
+		ft_strlcat(tmp, path, 1000);
+		ft_strlcat(tmp, "/", 1000);
+		ft_strlcat(tmp, dirent->d_name, 1000);
+		to_return->path = ft_strdup(tmp);
+		free(tmp);
 	}
+	else
+		to_return->path = ft_strdup(path);
 	to_return->statbuf = ft_calloc(sizeof(struct stat), 1);
 	if (!to_return->statbuf)
 	{
@@ -198,17 +206,6 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 		free(to_return);
 		return (NULL);
 	}
-	if (dirent)
-	{
-		tmp = ft_calloc(sizeof(char), 1000);
-		ft_strlcat(tmp, path, 1000);
-		ft_strlcat(tmp, "/", 1000);
-		ft_strlcat(tmp, dirent->d_name, 1000);
-		to_return->path = ft_strdup(tmp);
-		free(tmp);
-	}
-	else
-		to_return->path = ft_strdup(path);
 	ft_bzero(to_return->flags_rights, 12);
 	get_flags(to_return);
 	return (to_return);
