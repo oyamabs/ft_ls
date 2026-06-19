@@ -108,16 +108,9 @@ char		get_file_type(int mode)
 void	get_flags(t_file *file)
 {
 	// man stat(2)
-	struct stat *statbuf;
 	int			mode;
 
-	statbuf = malloc(sizeof(*statbuf));
-	if (stat(file->path, statbuf) < 0)
-	{
-		perror("ft_ls");
-		return ;
-	}
-	mode = statbuf->st_mode;
+	mode = file->statbuf->st_mode;
 	file->flags_rights[0] = get_file_type(mode);
 	file->flags_rights[1] = (S_IRUSR & mode) ? 'r' : '-';
 	file->flags_rights[2] = (S_IWUSR & mode) ? 'w' : '-';
@@ -129,7 +122,6 @@ void	get_flags(t_file *file)
 	file->flags_rights[8] = (S_IWOTH & mode) ? 'w' : '-';
 	file->flags_rights[9] = (S_IXOTH & mode) ? 'x' : '-';
 	file->flags_rights[10] = '\0';
-	free(statbuf);
 }
 
 t_file	*init_file(struct dirent *dirent, const char *path)
@@ -148,7 +140,23 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 		free(to_return);
 		return (NULL);
 	}
-	to_return->ent = ft_memcpy(to_return->ent, dirent, sizeof(*dirent));
+	to_return->statbuf = ft_calloc(sizeof(struct stat), 1);
+	if (!to_return->statbuf)
+	{
+		free(to_return->ent);
+		free(to_return);
+		return (NULL);
+	}
+	if (dirent)
+		to_return->ent = ft_memcpy(to_return->ent, dirent, sizeof(*dirent));
+	int lstatres = lstat(path, to_return->statbuf);
+	if (lstatres < 0)
+	{
+		free(to_return->ent);
+		free(to_return->statbuf);
+		free(to_return);
+		return (NULL);
+	}
 	tmp = ft_calloc(sizeof(char), 1000);
 	ft_strlcat(tmp, path, 1000);
 	ft_strlcat(tmp, "/", 1000);

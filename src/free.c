@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/18 14:46:37 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/18 14:47:23 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/19 12:31:05 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	free_file(void *file)
 {
 	t_file *f = (t_file *)file;
 	free(f->ent);
+	free(f->statbuf);
 	free(f->path);
 	free(f);
 }
@@ -33,6 +34,7 @@ void	free_tree(t_file_tree *tree)
 	while (current_branch != NULL)
 	{
 		t_file_tree *sub_tree = current_branch->content;
+		free(sub_tree->path);
 		free_tree(sub_tree);
 		current_branch = current_branch->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:02:20 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/01 16:37:51 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/19 12:15:29 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,14 @@ typedef struct s_file
 {
 	char			flags_rights[12];
 	struct dirent	*ent;
+	struct stat		*statbuf;
 	char			*points_to; //symlink?
 	char			*path;
 }	t_file;
 
 typedef struct s_file_tree
 {
+	char				*path;
 	t_list				*files;
 	t_list				*subdirectories;
 }	t_file_tree;
