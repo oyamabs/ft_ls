@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 14:14:18 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/19 15:48:37 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int	main(int argc, char **argv)
 	while (i < args.number_of_files)
 	{
 		sort_tree(trees[i]);
-		ft_printf("%p\n", trees[i]);
 		print_file_tree(trees[i], 0);
 		i++;
 	}
