@@ -128,10 +128,32 @@ void	get_flags(t_file *file)
 	file->flags_rights[10] = '\0';
 }
 
+char	*ft_basename(char *name)
+{
+	char	*last_slash;
+	int		i;
+
+	if (!name)
+		return (NULL);
+	last_slash = NULL;
+	i = 0;
+	while (name[i])
+	{
+		if (name[i] == '/')
+		{
+			last_slash = name;
+			ft_printf("Found slash\n");
+		}
+		i++;
+	}
+	if (last_slash)
+		return (last_slash + 1);
+	return (name);
+}
+
 t_file	*init_file(struct dirent *dirent, const char *path)
 {
 	t_file	*to_return;
-	char	*tmp;
 
 	to_return = ft_calloc(sizeof(*to_return), 1);
 	if (!to_return)
@@ -145,9 +167,10 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 			return (NULL);
 		}
 		to_return->ent = ft_memcpy(to_return->ent, dirent, sizeof(*dirent));
-		tmp = ft_calloc(sizeof(char), 1000);
+		to_return->path = ft_strdup(dirent->d_name);
 	}
-	to_return->path = ft_strdup(path);
+	else
+		to_return->path = ft_strdup(ft_basename((char *)path));
 	to_return->statbuf = ft_calloc(sizeof(struct stat), 1);
 	if (!to_return->statbuf)
 	{
