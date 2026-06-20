@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 16:00:23 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/20 17:41:43 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <pwd.h>
 #include "../libft/includes/libft.h"
 
 void	print_file(void *file)
@@ -25,7 +26,10 @@ void	print_file(void *file)
 	f = (t_file *)file;
 	if (!f || !f->ent)
 		return ;
-	ft_printf("%s %d %s %s %d %d %d %d:%d %s\n", f->flags_rights, 420, "caca", "prout", 69, "Pet", 1, 20, 9, f->ent->d_name);
+	struct passwd* passbuf;
+	passbuf = getpwuid(f->statbuf->st_uid);
+	ft_printf("%s %d %s %s %d %d %d %d:%d %s\n", f->flags_rights, f->statbuf->st_nlink , passbuf->pw_name, "prout", 69, "Pet", 1, 20, 9, f->path);
+
 }
 
 void print_file_tree(t_file_tree *tree, int level)
@@ -44,7 +48,7 @@ void print_file_tree(t_file_tree *tree, int level)
             if (file->points_to)
                 ft_printf("📄 %s -> %s\n", file->path, file->points_to);
             else
-                ft_printf("📄 %s\n", file->path);
+                print_file(file);// ft_printf("📄 %s\n", file->path);
         }
         current_file = current_file->next;
     }
