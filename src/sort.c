@@ -6,19 +6,49 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/19 14:02:48 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 14:12:29 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/22 12:30:29 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
 #include "../libft/includes/libft.h"
+#include <dirent.h>
+#include "utils.h"
+
+void	lower_string(char *s)
+{
+	for (size_t i = 0; i < ft_strlen(s); i++)
+		s[i] = ft_tolower(s[i]);
+}
 
 int	compare_ascii(void *content_a, void *content_b)
 {
 	t_file	*a = (t_file *)content_a;
 	t_file	*b = (t_file *)content_b;
 
-	return (ft_strncmp(a->path, b->path, 256));
+	char	*name_a = (a->ent) ? a->ent->d_name : ft_basename(a->path);
+	char	*name_b = (b->ent) ? b->ent->d_name : ft_basename(b->path);
+
+	lower_string(name_a);
+	lower_string(name_b);
+
+	int	is_dot_a = (ft_strncmp(name_a, ".", 2) == 0 || ft_strncmp(name_a, "..", 3) == 0);
+	int	is_dot_b = (ft_strncmp(name_b, ".", 2) == 0 || ft_strncmp(name_b, "..", 3) == 0);
+
+	if (is_dot_a && !is_dot_b)
+		return (-1);
+	if (!is_dot_a && is_dot_b)
+		return (1);
+	if (is_dot_a && is_dot_b)
+		return (ft_strlen(name_b) - ft_strlen(name_b));
+
+	if (name_a[0] == '.' && name_a[1] != '\0')
+		name_a++;
+	if (name_b[0] == '.' && name_b[1] != '\0')
+		name_b++;
+
+	int retcode = ft_strncmp(name_a, name_b, 256);
+	return (retcode);
 }
 
 void	sort_entries_alpha(t_list *files)
