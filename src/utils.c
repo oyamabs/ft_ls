@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/22 16:03:04 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/22 16:28:47 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <time.h>
 #include <unistd.h>
 #include <pwd.h>
+#include <grp.h>
 #include "../libft/includes/libft.h"
 
 void	print_file(void *file)
@@ -27,8 +29,10 @@ void	print_file(void *file)
 	if (!f || !f->ent)
 		return ;
 	struct passwd* passbuf;
+	struct group* groupbuf;
 	passbuf = getpwuid(f->statbuf->st_uid);
-	ft_printf("%s %d %s %s %d %d %d %d:%d %s\n", f->flags_rights, f->statbuf->st_nlink , passbuf->pw_name, "prout", 69, "Pet", 1, 20, 9, f->path);
+	groupbuf = getgrgid(f->statbuf->st_gid);
+	ft_printf("%s %d %s %s %d %s %d %d:%d %s\n", f->flags_rights, f->statbuf->st_nlink , passbuf->pw_name, groupbuf->gr_name, f->statbuf->st_size, "dsf", 1, 20, 9, f->path);
 
 }
 
