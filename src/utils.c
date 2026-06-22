@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/20 17:41:43 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/22 11:34:07 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 		free(to_return);
 		return (NULL);
 	}
-	int lstatres = lstat(path, to_return->statbuf);
+	int lstatres = lstat(to_return->path, to_return->statbuf);
 	if (lstatres < 0)
 	{
 		free(to_return->ent);
