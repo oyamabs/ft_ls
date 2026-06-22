@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/22 11:34:07 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/22 16:03:04 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,7 @@ char	*ft_basename(char *name)
 t_file	*init_file(struct dirent *dirent, const char *path)
 {
 	t_file	*to_return;
+	char	*full_path;
 
 	to_return = ft_calloc(sizeof(*to_return), 1);
 	if (!to_return)
@@ -168,25 +169,36 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 		}
 		to_return->ent = ft_memcpy(to_return->ent, dirent, sizeof(*dirent));
 		to_return->path = ft_strdup(dirent->d_name);
+
+		full_path = ft_calloc(sizeof(char), 1000);
+		ft_strlcat(full_path, path, 1000);
+		ft_strlcat(full_path, "/", 1000);
+		ft_strlcat(full_path, dirent->d_name, 1000);
 	}
 	else
+	{
 		to_return->path = ft_strdup(ft_basename((char *)path));
+		full_path = ft_strdup(path);
+	}
 	to_return->statbuf = ft_calloc(sizeof(struct stat), 1);
 	if (!to_return->statbuf)
 	{
 		free(to_return->ent);
+		free(full_path);
 		free(to_return);
 		return (NULL);
 	}
-	int lstatres = lstat(to_return->path, to_return->statbuf);
+	int lstatres = lstat(full_path, to_return->statbuf);
 	if (lstatres < 0)
 	{
 		free(to_return->ent);
 		free(to_return->statbuf);
+		free(full_path);
 		free(to_return);
 		return (NULL);
 	}
 	ft_bzero(to_return->flags_rights, 12);
 	get_flags(to_return);
+	free(full_path);
 	return (to_return);
 }
