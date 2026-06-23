@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/19 14:02:48 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/23 12:14:02 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/23 12:28:04 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,25 @@ int	ft_strcasecmp_ls(const char *s1, const char *s2)
 	return (ft_strncmp(s2, s1, 256));
 }
 
-int	compare_ascii(void *content_a, void *content_b)
+int	compare_ascii(void *content_a, void *content_b, bool isdir)
 {
-	t_file	*a = (t_file *)content_a;
-	t_file	*b = (t_file *)content_b;
+	char	*name_a, *name_b;
+	if (!isdir)
+	{
+		t_file	*a = (t_file *)content_a;
+		t_file	*b = (t_file *)content_b;
 
-	char	*name_a = (a->ent) ? a->ent->d_name : ft_basename(a->path);
-	char	*name_b = (b->ent) ? b->ent->d_name : ft_basename(b->path);
+		name_a = (a->ent) ? a->ent->d_name : ft_basename(a->path);
+		name_b = (b->ent) ? b->ent->d_name : ft_basename(b->path);
+	}
+	else
+	{
+		t_file_tree	*a = (t_file_tree *)content_a;
+		t_file_tree	*b = (t_file_tree *)content_b;
+
+		name_a = ft_basename(a->path);
+		name_b = ft_basename(b->path);
+	}
 
 	int is_dot_a = (ft_strncmp(name_a, ".", 2) == 0 || ft_strncmp(name_a, "..", 3) == 0);
 	int is_dot_b = (ft_strncmp(name_b, ".", 2) == 0 || ft_strncmp(name_b, "..", 3) == 0);
@@ -59,28 +71,7 @@ int	compare_ascii(void *content_a, void *content_b)
 	return (ft_strcasecmp_ls(name_a, name_b));
 }
 
-int	compare_ascii_dir(void *content_a, void *content_b)
-{
-	t_file_tree	*a = (t_file_tree *)content_a;
-	t_file_tree	*b = (t_file_tree *)content_b;
-
-	char	*name_a = ft_basename(a->path);
-	char	*name_b = ft_basename(b->path);
-
-	int is_dot_a = (ft_strncmp(name_a, ".", 2) == 0 || ft_strncmp(name_a, "..", 3) == 0);
-	int is_dot_b = (ft_strncmp(name_b, ".", 2) == 0 || ft_strncmp(name_b, "..", 3) == 0);
-
-	if (is_dot_a && !is_dot_b)
-		return (-1);
-	if (!is_dot_a && is_dot_b)
-		return (1);
-	if (is_dot_a && is_dot_b) // Force '.' à être au dessus de '..'
-		return ((int)ft_strlen(name_a) - (int)ft_strlen(name_b));
-
-	return (ft_strcasecmp_ls(name_a, name_b));
-}
-
-void	sort_entries_alpha(t_list *files)
+void	sort_entries_alpha(t_list *files, bool isdir)
 {
 	bool	swapped;
 	t_list	*ptr1;
@@ -93,36 +84,20 @@ void	sort_entries_alpha(t_list *files)
 		ptr1 = files;
 		while (ptr1->next != NULL)
 		{
-			if (compare_ascii(ptr1->content, ptr1->next->content) > 0)
+			if (compare_ascii(ptr1->content, ptr1->next->content, isdir) > 0)
 			{
-				t_file *tmp = (t_file *)ptr1->content;
-				ptr1->content = ptr1->next->content;
-				ptr1->next->content = tmp;
-				swapped = true;
-			}
-			ptr1 = ptr1->next;
-		}
-	} while (swapped == true);
-}
-
-void	sort_entries_alpha_dir(t_list *directories)
-{
-	bool	swapped;
-	t_list	*ptr1;
-
-	if (!directories)
-		return ;
-	do
-	{
-		swapped = false;
-		ptr1 = directories;
-		while (ptr1->next != NULL)
-		{
-			if (compare_ascii_dir(ptr1->content, ptr1->next->content) > 0)
-			{
-				t_file_tree *tmp = (t_file_tree *)ptr1->content;
-				ptr1->content = ptr1->next->content;
-				ptr1->next->content = tmp;
+				if (isdir)
+				{
+					t_file *tmp = (t_file *)ptr1->content;
+					ptr1->content = ptr1->next->content;
+					ptr1->next->content = tmp;
+				}
+				else
+				{
+					t_file_tree *tmp = (t_file_tree *)ptr1->content;
+					ptr1->content = ptr1->next->content;
+					ptr1->next->content = tmp;
+				}
 				swapped = true;
 			}
 			ptr1 = ptr1->next;
@@ -143,7 +118,7 @@ void	sort_entries_reverse(t_list *files)
 		ptr1 = files;
 		while (ptr1->next != NULL)
 		{
-			if (compare_ascii(ptr1->content, ptr1->next->content) < 0)
+			if (compare_ascii(ptr1->content, ptr1->next->content, false) < 0)
 			{
 				t_file *tmp = (t_file *)ptr1->content;
 				ptr1->content = ptr1->next->content;
@@ -160,9 +135,9 @@ void	sort_tree(t_file_tree *tree)
 	if (!tree)
 		return ;
 	t_list *current_files = tree->files;
-	sort_entries_alpha(current_files);
+	sort_entries_alpha(current_files, false);
 	t_list *current_branch = tree->subdirectories;
-	sort_entries_alpha_dir(current_branch);
+	sort_entries_alpha(current_branch, true);
 	while (current_branch != NULL)
 	{
 		t_file_tree *sub_tree = current_branch->content;
