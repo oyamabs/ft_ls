@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/19 14:02:48 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/23 12:28:04 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/23 14:18:32 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	ft_strcasecmp_ls(const char *s1, const char *s2)
 	size_t	i = 0;
 	size_t	j = 0;
 
+	if (s1 == s2)
+		return 0;
 	if (s1[i] == '.' && s1[i + 1] != '\0')
 		s1++;
 	if (s2[j] == '.' && s2[j + 1] != '\0')
@@ -40,7 +42,9 @@ int	ft_strcasecmp_ls(const char *s1, const char *s2)
 
 int	compare_ascii(void *content_a, void *content_b, bool isdir)
 {
-	char	*name_a, *name_b;
+	char	*name_a;
+	char	*name_b;
+
 	if (!isdir)
 	{
 		t_file	*a = (t_file *)content_a;
@@ -71,38 +75,71 @@ int	compare_ascii(void *content_a, void *content_b, bool isdir)
 	return (ft_strcasecmp_ls(name_a, name_b));
 }
 
+void	swap(t_list *ptr, bool isdir)
+{
+	if (isdir)
+	{
+		t_file *tmp = (t_file *)ptr->content;
+		ptr->content = ptr->next->content;
+		ptr->next->content = tmp;
+	}
+	else
+	{
+		t_file_tree *tmp = (t_file_tree *)ptr->content;
+		ptr->content = ptr->next->content;
+		ptr->next->content = tmp;
+	}
+}
+
+t_list	*part(t_list *head, t_list *end, bool isdir)
+{
+	t_list	*pivot = end;
+	t_list	*i = head;
+	t_list	*j = head;
+	void	*tmp;
+
+	while (j != end && j != NULL)
+	{
+		if (compare_ascii(j->content, pivot->content, isdir) < 0)
+		{
+			tmp = i->content;
+			i->content = j->content;
+			j->content = tmp;
+			i = i->next;
+		}
+		j = j->next;
+	}
+	tmp = i->content;
+	i->content = end->content;
+	end->content = tmp;
+	return (i);
+}
+
+void	quicksort(t_list *files, t_list *end, bool isdir)
+{
+	if (!files || files == end || files == end->next)
+		return ;
+	t_list *pivot = part(files, end, isdir);
+	t_list *prev = files;
+
+	if (pivot != files)
+	{
+		while (prev != NULL && prev->next != pivot)
+			prev = prev->next;
+		quicksort(files, prev, isdir);
+	}
+
+	if (pivot != NULL && pivot->next != NULL)
+		quicksort(pivot->next, end, isdir);
+}
+
 void	sort_entries_alpha(t_list *files, bool isdir)
 {
-	bool	swapped;
-	t_list	*ptr1;
-
-	if (!files)
+	if (!files || !files->next)
 		return ;
-	do
-	{
-		swapped = false;
-		ptr1 = files;
-		while (ptr1->next != NULL)
-		{
-			if (compare_ascii(ptr1->content, ptr1->next->content, isdir) > 0)
-			{
-				if (isdir)
-				{
-					t_file *tmp = (t_file *)ptr1->content;
-					ptr1->content = ptr1->next->content;
-					ptr1->next->content = tmp;
-				}
-				else
-				{
-					t_file_tree *tmp = (t_file_tree *)ptr1->content;
-					ptr1->content = ptr1->next->content;
-					ptr1->next->content = tmp;
-				}
-				swapped = true;
-			}
-			ptr1 = ptr1->next;
-		}
-	} while (swapped == true);
+
+	t_list	*end = ft_lstlast(files);
+	quicksort(files, end, isdir);
 }
 
 void	sort_entries_reverse(t_list *files)
