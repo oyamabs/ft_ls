@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 15:46:13 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 17:35:34 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/23 12:12:09 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	enter_directory(struct dirent *t, const char *name, t_file_tree *current)
 	{
 		t_file_tree	*new_branch;
 		new_branch = ft_calloc(sizeof(*new_branch), 1);
-		new_branch->path = ft_strdup(name_buffer);
+		new_branch->path = ft_strdup(t->d_name);
 		ft_lstadd_back(&(current->subdirectories), ft_lstnew((t_file_tree *)new_branch));
 		recursively_explore(ddp, another, name_buffer, new_branch);
 	}
