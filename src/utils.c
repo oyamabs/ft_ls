@@ -148,7 +148,6 @@ char	*ft_basename(char *name)
 		if (name[i] == '/')
 		{
 			last_slash = name;
-			ft_printf("Found slash\n");
 		}
 		i++;
 	}
