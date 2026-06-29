@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 14:53:29 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/29 15:40:53 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,35 @@ void	print_file(void *file)
 	struct group* groupbuf;
 	passbuf = getpwuid(f->statbuf->st_uid);
 	groupbuf = getgrgid(f->statbuf->st_gid);
-	if (f->points_to)
-		ft_printf("%s %d %s %s %d %s %d %d:%d %s -> %s\n", f->flags_rights, f->statbuf->st_nlink , passbuf->pw_name, groupbuf->gr_name, f->statbuf->st_size, "dsf", 1, 20, 9, f->path, f->points_to);
+	char *name = passbuf ? passbuf->pw_name : "unknown";
+	char *group = groupbuf ? groupbuf->gr_name : "unknown";
+	
+	char time_str[30];
+	time_t now;
+	time_t file_time;
+	char	*date_ctime;
+
+	file_time = f->statbuf->st_mtim.tv_sec;
+	date_ctime = ctime(&file_time);
+	time(&now);
+
+	if ((now - file_time) > 15778800 || (file_time - now) > 15778800)
+	{
+		ft_memcpy(time_str, date_ctime + 4, 7);
+		time_str[6] = ' ';
+		time_str[7] = ' ';
+		ft_memcpy(time_str + 8, date_ctime + 20, 4);
+		time_str[12] = '\0';
+	}
 	else
-		ft_printf("%s %d %s %s %d %s %d %d:%d %s\n", f->flags_rights, f->statbuf->st_nlink , passbuf->pw_name, groupbuf->gr_name, f->statbuf->st_size, "dsf", 1, 20, 9, f->path);
+	{
+		ft_memcpy(time_str, date_ctime + 4, 12);
+		time_str[12] = '\0';
+	}
+	if (f->points_to)
+		ft_printf("%s %d %s %s %d %s %s -> %s\n", f->flags_rights, f->statbuf->st_nlink, name, group, f->statbuf->st_size, time_str, f->path, f->points_to);
+	else
+		ft_printf("%s %d %s %s %d %s %s\n", f->flags_rights, f->statbuf->st_nlink , name, group, f->statbuf->st_size, time_str, f->path);
 
 }
 
