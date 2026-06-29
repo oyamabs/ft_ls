@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:02:20 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 12:15:29 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/29 17:05:14 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,13 @@ typedef struct s_file_tree
 	t_list				*files;
 	t_list				*subdirectories;
 }	t_file_tree;
+
+typedef struct s_width
+{
+	int	max_nlink;
+	int	max_user;
+	int	max_group;
+	int	max_size;
+}	t_width;
 
 #endif // TYPES_H

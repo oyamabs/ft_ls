@@ -13,6 +13,7 @@ SOURCEFILES = \
 			  src/utils.c \
 			  src/free.c \
 			  src/sort.c \
+			  src/print.c \
 			  src/arguments/flags.c \
 			  src/arguments/arguments.c \
 			  src/explore/explore.c \

@@ -6,13 +6,12 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 15:49:50 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/29 16:49:06 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
 #include <dirent.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
@@ -20,83 +19,6 @@
 #include <pwd.h>
 #include <grp.h>
 #include "../libft/includes/libft.h"
-
-void	print_file(void *file)
-{
-	t_file	*f;
-
-	f = (t_file *)file;
-	if (!f)
-		return ;
-	struct passwd* passbuf;
-	struct group* groupbuf;
-	passbuf = getpwuid(f->statbuf->st_uid);
-	groupbuf = getgrgid(f->statbuf->st_gid);
-	char *name = passbuf ? passbuf->pw_name : "unknown";
-	char *group = groupbuf ? groupbuf->gr_name : "unknown";
-	
-	char time_str[30];
-	time_t now;
-	time_t file_time;
-	char	*date_ctime;
-
-	file_time = f->statbuf->st_mtim.tv_sec;
-	date_ctime = ctime(&file_time);
-	time(&now);
-
-	// if file is older than 6 months
-	if ((now - file_time) > 15778800 || (file_time - now) > 15778800)
-	{
-		ft_memcpy(time_str, date_ctime + 4, 7);
-		time_str[6] = ' ';
-		time_str[7] = ' ';
-		ft_memcpy(time_str + 8, date_ctime + 20, 4);
-		time_str[12] = '\0';
-	}
-	else
-	{
-		ft_memcpy(time_str, date_ctime + 4, 12);
-		time_str[12] = '\0';
-	}
-	if (f->points_to)
-		ft_printf("%s %d %s %s %d %s %s -> %s\n", f->flags_rights, f->statbuf->st_nlink, name, group, f->statbuf->st_size, time_str, f->path, f->points_to);
-	else
-		ft_printf("%s %d %s %s %d %s %s\n", f->flags_rights, f->statbuf->st_nlink , name, group, f->statbuf->st_size, time_str, f->path);
-
-}
-
-void print_file_tree(t_file_tree *tree, int level)
-{
-    if (!tree)
-        return;
-
-    t_list *current_file = tree->files;
-    while (current_file != NULL)
-    {
-        t_file *file = (t_file *)current_file->content;
-        if (file)
-		{
-			for (int i = 0; i < level; i++)
-				ft_printf("    ");
-			print_file(file);// ft_printf("📄 %s\n", file->path);
-        }
-        current_file = current_file->next;
-    }
-
-    t_list *current_sub = tree->subdirectories;
-    while (current_sub != NULL)
-    {
-        t_file_tree *subtree = (t_file_tree *)current_sub->content;
-        if (subtree)
-        {
-            for (int i = 0; i < level; i++)
-                ft_printf("    ");
-            ft_printf("📁 [Dossier: %s]:\n", subtree->path);
-            print_file_tree(subtree, level + 1);
-        }
-        current_sub = current_sub->next;
-    }
-}
 
 /*
    man inode(7)
@@ -117,7 +39,7 @@ void print_file_tree(t_file_tree *tree, int level)
            S_IXOTH     00001   others have execute permission
 */
 
-char		get_file_type(int mode)
+char	get_file_type(int mode)
 {
 	mode = (mode & S_IFMT);
 	if (S_ISREG(mode))
