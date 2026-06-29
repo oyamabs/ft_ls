@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 15:40:53 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/29 15:49:50 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	print_file(void *file)
 	date_ctime = ctime(&file_time);
 	time(&now);
 
+	// if file is older than 6 months
 	if ((now - file_time) > 15778800 || (file_time - now) > 15778800)
 	{
 		ft_memcpy(time_str, date_ctime + 4, 7);
