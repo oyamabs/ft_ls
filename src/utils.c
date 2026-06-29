@@ -75,9 +75,9 @@ void print_file_tree(t_file_tree *tree, int level)
     {
         t_file *file = (t_file *)current_file->content;
         if (file)
-        {
-            for (int i = 0; i < level; i++)
-                ft_printf("    ");
+		{
+			for (int i = 0; i < level; i++)
+				ft_printf("    ");
 			print_file(file);// ft_printf("📄 %s\n", file->path);
         }
         current_file = current_file->next;
