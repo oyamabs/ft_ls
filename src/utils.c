@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/22 17:15:47 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/29 14:09:58 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ void	print_file(void *file)
 	struct group* groupbuf;
 	passbuf = getpwuid(f->statbuf->st_uid);
 	groupbuf = getgrgid(f->statbuf->st_gid);
-	ft_printf("%s %d %s %s %d %s %d %d:%d %s\n", f->flags_rights, f->statbuf->st_nlink , passbuf->pw_name, groupbuf->gr_name, f->statbuf->st_size, "dsf", 1, 20, 9, f->path);
+	if (f->points_to)
+		ft_printf("%s %d %s %s %d %s %d %d:%d %s -> %s\n", f->flags_rights, f->statbuf->st_nlink , passbuf->pw_name, groupbuf->gr_name, f->statbuf->st_size, "dsf", 1, 20, 9, f->path, f->points_to);
+	else
+		ft_printf("%s %d %s %s %d %s %d %d:%d %s\n", f->flags_rights, f->statbuf->st_nlink , passbuf->pw_name, groupbuf->gr_name, f->statbuf->st_size, "dsf", 1, 20, 9, f->path);
 
 }
 
@@ -49,10 +52,7 @@ void print_file_tree(t_file_tree *tree, int level)
         {
             for (int i = 0; i < level; i++)
                 ft_printf("    ");
-            if (file->points_to)
-                ft_printf("📄 %s -> %s\n", file->path, file->points_to);
-            else
-                print_file(file);// ft_printf("📄 %s\n", file->path);
+			print_file(file);// ft_printf("📄 %s\n", file->path);
         }
         current_file = current_file->next;
     }
@@ -204,6 +204,19 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 	}
 	ft_bzero(to_return->flags_rights, 12);
 	get_flags(to_return);
+	if (to_return->flags_rights[0] == 'l')
+	{
+		to_return->points_to = ft_calloc(sizeof(char), 1000);
+		if (readlink(full_path, to_return->points_to, 1000) < 0)
+		{
+			free(to_return->ent);
+			free(to_return->statbuf);
+			free(to_return->points_to);
+			free(full_path);
+			free(to_return);
+			return (NULL);
+		}
+	}
 	free(full_path);
 	return (to_return);
 }

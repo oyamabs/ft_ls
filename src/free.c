@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/18 14:46:37 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/19 13:40:16 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/29 13:43:39 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	free_file(void *file)
 		free(f->statbuf);
 	if (f->path != NULL)
 		free(f->path);
+	if (f->points_to != NULL)
+		free(f->points_to);
 	free(f);
 }
 
