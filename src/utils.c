@@ -129,7 +129,8 @@ void	get_flags(t_file *file)
 	file->flags_rights[7] = (S_IROTH & mode) ? 'r' : '-';
 	file->flags_rights[8] = (S_IWOTH & mode) ? 'w' : '-';
 	file->flags_rights[9] = (S_IXOTH & mode) ? 'x' : '-';
-	file->flags_rights[9] = (S_ISVTX & mode) ? 'T' : '-';
+	if (S_ISVTX & mode)
+		file->flags_rights[9] = file->flags_rights[9] == 'x' ? 't' : 'T';
 	file->flags_rights[10] = '\0';
 }
 
