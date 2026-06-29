@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 14:09:58 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/29 14:53:29 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	print_file(void *file)
 	t_file	*f;
 
 	f = (t_file *)file;
-	if (!f || !f->ent)
+	if (!f)
 		return ;
 	struct passwd* passbuf;
 	struct group* groupbuf;
