@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 15:46:13 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/23 12:12:09 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/29 15:48:05 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	recursively_explore(DIR *dp, struct dirent *t, const char *name, t_file_tre
 	while ((t = readdir(dp)) != NULL)
 	{
 		t_file *f = NULL;
-		f = init_file(t, name);
+		f = init_file(t, name, false);
 		if (ft_strncmp(t->d_name, ".", 2) == 0 || ft_strncmp(t->d_name, "..", 3) == 0)
 		{
 			ft_lstadd_back(&(branch->files), ft_lstnew(f));

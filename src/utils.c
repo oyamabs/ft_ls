@@ -182,7 +182,7 @@ char	*ft_basename(char *name)
 	return (name);
 }
 
-t_file	*init_file(struct dirent *dirent, const char *path)
+t_file	*init_file(struct dirent *dirent, const char *path, bool is_individual_file)
 {
 	t_file	*to_return;
 	char	*full_path;
@@ -208,7 +208,10 @@ t_file	*init_file(struct dirent *dirent, const char *path)
 	}
 	else
 	{
-		to_return->path = ft_strdup(ft_basename((char *)path));
+		if (!is_individual_file)
+			to_return->path = ft_strdup(ft_basename((char *)path));
+		else
+			to_return->path = ft_strdup((char *)path);
 		full_path = ft_strdup(path);
 	}
 	to_return->statbuf = ft_calloc(sizeof(struct stat), 1);
