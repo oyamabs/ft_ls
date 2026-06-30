@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/19 14:02:48 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/23 14:18:32 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/30 16:34:10 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,42 @@ void	sort_entries_reverse(t_list *files)
 			ptr1 = ptr1->next;
 		}
 	} while (swapped == true);
+}
+
+t_list	*reverse_list(t_list *lst)
+{
+	t_list	*prev;
+	t_list	*current;
+	t_list	*next;
+
+	prev = NULL;
+	current = lst;
+	while (current != NULL)
+	{
+		next = current->next;
+		current->next = prev;
+		prev = current;
+		current = next;
+	}
+	return (prev);
+}
+
+void	reverse_tree(t_file_tree *tree)
+{
+	if (!tree)
+		return ;
+
+	tree->files = reverse_list(tree->files);
+
+	tree->subdirectories = reverse_list(tree->subdirectories);
+
+	t_list *current_branch = tree->subdirectories;
+	while (current_branch != NULL)
+	{
+		t_file_tree *sub_tree = (t_file_tree *)current_branch->content;
+		reverse_tree(sub_tree);
+		current_branch = current_branch->next;
+	}
 }
 
 void	sort_tree(t_file_tree *tree)

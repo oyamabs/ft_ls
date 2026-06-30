@@ -7,7 +7,7 @@
 - [x] Create a data type for the files
 - [x] Create a tree (for recursivity sake)
 - [x] Sort tree
-- [ ] make the reverse of the tree for -r
+- [x] make the reverse of the tree for -r
 - [ ] make different kinds of prints depending on the arguments
 - [ ] Show data
 - [ ] write more tests
