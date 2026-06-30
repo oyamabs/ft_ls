@@ -28,17 +28,21 @@ int	ft_strcasecmp_ls(const char *s1, const char *s2)
 	if (s2[j] == '.' && s2[j + 1] != '\0')
 		s2++;
 
-	while (s1[i] && s2[i])
+	while (s1[i] || s2[j])
 	{
-		if (ft_tolower((unsigned char)s1[i]) != ft_tolower((unsigned char)s2[i]))
-			return (ft_tolower((unsigned char)s1[i]) - ft_tolower((unsigned char)s2[i]));
-		i++;
+		while (s1[i] == '-' || s1[i] == '_' || (i == 0 && s1[i] == '.' && s1[i + 1] != '\0'))
+			i++;
+		while (s2[j] == '-' || s2[j] == '_' || (j == 0 && s2[j] == '.' && s2[j + 1] != '\0'))
+			j++;
+		char c1 = ft_tolower((unsigned int)s1[i]);
+		char c2 = ft_tolower((unsigned int)s2[j]);
+		if (c1 != c2)
+			return (c1 - c2);
+		if (s1[i]) i++;
+		if (s2[j]) j++;
 	}
-	if (ft_tolower((unsigned char)s1[i]) != ft_tolower((unsigned char)s2[i]))
-		return (ft_tolower((unsigned char)s1[i]) - ft_tolower((unsigned char)s2[i]));
 
-	// reverse the comparison to respect how `ls` sorts filenames
-	return (ft_strncmp(s2, s1, 256));
+	return (ft_strncmp(s1, s2, 256));
 }
 
 int	compare_ascii(void *content_a, void *content_b, bool isdir)
