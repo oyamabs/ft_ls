@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/18 14:46:37 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 13:43:39 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/30 19:38:44 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	free_tree(t_file_tree *tree)
 {
 	if (!tree)
 		return ;
+	if (tree->statbuf)
+		free(tree->statbuf);
 	t_list *current_files = tree->files;
 	ft_lstclear(&current_files, free_file);
 	free(current_files);
