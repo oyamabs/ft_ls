@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 22:05:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/05 14:56:34 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/30 14:53:15 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	init_arguments(t_arguments *arguments, int ac, char **av)
 		current_ac++;
 	}
 	arguments->number_of_files = filenum;
-	ft_printf("number of files: %d\n", filenum);
+	// ft_printf("number of files: %d\n", filenum);
 	if (filenum > 0)
 		arguments->filenames = malloc(sizeof(*arguments->filenames) * filenum);
 	else
