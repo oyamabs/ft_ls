@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 17:38:32 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/30 16:02:12 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,35 +58,34 @@ char	*pad_left(char *str, int max_len)
 	return (res);
 }
 
-t_width	get_widths(t_list *files)
+void    accumulate_widths(t_width *w, t_list *files)
 {
-	t_width	w;
-	t_list	*current;
-	char	*tmp;
-
-	ft_bzero(&w, sizeof(w));
+	t_list    *current;
+	char    *tmp;
+	
+	if (!w || !files)
+		return ;
 	current = files;
 	while (current != NULL)
 	{
-		t_file	*f = (t_file *)current->content;
+		t_file    *f = (t_file *)current->content;
 		if (f && f->statbuf)
 		{
 			tmp = ft_itoa(f->statbuf->st_nlink);
-			if ((int)ft_strlen(tmp) > w.max_nlink) w.max_nlink = ft_strlen(tmp);
-			free(tmp);
-
-			struct passwd *pw = getpwuid(f->statbuf->st_size);
-			struct group *gw = getgrgid(f->statbuf->st_gid);
-			if (pw && (int)ft_strlen(pw->pw_name) > w.max_user) w.max_user = ft_strlen(pw->pw_name);
-			if (gw && (int)ft_strlen(gw->gr_name) > w.max_group) w.max_group = ft_strlen(gw->gr_name);
+			if ((int)ft_strlen(tmp) > w->max_nlink) w->max_nlink = ft_strlen(tmp);
+				free(tmp);
 			
+			/* FIX : Correction de st_size -> st_uid */
+			struct passwd *pw = getpwuid(f->statbuf->st_uid);
+			struct group *gw = getgrgid(f->statbuf->st_gid);
+			if (pw && (int)ft_strlen(pw->pw_name) > w->max_user) w->max_user = ft_strlen(pw->pw_name);
+			if (gw && (int)ft_strlen(gw->gr_name) > w->max_group) w->max_group = ft_strlen(gw->gr_name);
 			tmp = ft_itoa(f->statbuf->st_size);
-			if ((int)ft_strlen(tmp) > w.max_size) w.max_size = ft_strlen(tmp);
+			if ((int)ft_strlen(tmp) > w->max_size) w->max_size = ft_strlen(tmp);
 			free(tmp);
 		}
 		current = current->next;
 	}
-	return (w);
 }
 
 void	print_file_aligned(t_file *f, t_width w, char *time_str)
@@ -126,30 +125,28 @@ void	print_file_aligned(t_file *f, t_width w, char *time_str)
 	free(pad_size);
 }
 
-void print_file_tree(t_file_tree *tree, int level)
+void print_file_tree(t_file_tree *tree, int level, t_width widths)
 {
-    if (!tree)
-        return;
+	if (!tree)
+		return;
 
-    t_list *current_file = tree->files;
-	t_width widths = get_widths(current_file);
-    while (current_file != NULL)
-    {
-        t_file *file = (t_file *)current_file->content;
-        if (file)
+	t_list *current_file = tree->files;
+	while (current_file != NULL)
+	{
+		t_file *file = (t_file *)current_file->content;
+		if (file)
 		{
 			for (int i = 0; i < level; i++)
 				ft_printf("    ");
-			char time_str[30];
-			time_t now;
-			time_t file_time;
+			char	time_str[30];
+			time_t	now;
+			time_t	file_time;
 			char	*date_ctime;
-
+			
 			file_time = file->statbuf->st_mtim.tv_sec;
 			date_ctime = ctime(&file_time);
 			time(&now);
-
-			// if file is older than 6 months
+			
 			if ((now - file_time) > 15778800 || (file_time - now) > 15778800)
 			{
 				ft_memcpy(time_str, date_ctime + 4, 7);
@@ -164,20 +161,20 @@ void print_file_tree(t_file_tree *tree, int level)
 				time_str[12] = '\0';
 			}
 			print_file_aligned(file, widths, time_str);
-        }
-        current_file = current_file->next;
-    }
-    t_list *current_sub = tree->subdirectories;
-    while (current_sub != NULL)
-    {
-        t_file_tree *subtree = (t_file_tree *)current_sub->content;
-        if (subtree)
-        {
-            for (int i = 0; i < level; i++)
-                ft_printf("    ");
-            ft_printf("📁 [Dossier: %s]:\n", subtree->path);
-            print_file_tree(subtree, level + 1);
-        }
-        current_sub = current_sub->next;
-    }
+		}
+		current_file = current_file->next;
+	}
+	t_list *current_sub = tree->subdirectories;
+	while (current_sub != NULL)
+	{
+		t_file_tree *subtree = (t_file_tree *)current_sub->content;
+		if (subtree)
+		{
+			for (int i = 0; i < level; i++)
+				ft_printf("    ");
+			ft_printf("📁 [Dossier: %s]:\n", subtree->path);
+			print_file_tree(subtree, level + 1, widths);
+		}
+		current_sub = current_sub->next;
+	}
 }

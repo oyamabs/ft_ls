@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 15:47:50 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/30 16:09:50 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 #include "free.h"
 #include "sort.h"
 
-
 int	main(int argc, char **argv)
 {
 	int				i;
@@ -29,6 +28,7 @@ int	main(int argc, char **argv)
 	DIR				**dps;
 	struct dirent	*direc;
 	t_file_tree		**trees;
+	t_width			global_width;
 
 	init_arguments(&args, argc, argv);
 	i = 0;
@@ -59,16 +59,22 @@ int	main(int argc, char **argv)
 	i = 0;
 	while (i < args.number_of_files)
 	{
-		//ft_printf("%s ", args.filenames[i]);
 		if (args.filenames[i])
 			free(args.filenames[i]);
 		i++;
 	}
 	i = 0;
+	ft_bzero(&global_width, sizeof(global_width));
 	while (i < args.number_of_files)
 	{
 		sort_tree(trees[i]);
-		print_file_tree(trees[i], 0);
+		accumulate_widths(&global_width, trees[i]->files);
+		i++;
+	}
+	i = 0;
+	while (i < args.number_of_files)
+	{
+		print_file_tree(trees[i], 0, global_width);
 		i++;
 	}
 	free(args.filenames);
