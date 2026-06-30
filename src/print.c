@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/30 16:02:12 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/30 16:20:24 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void    accumulate_widths(t_width *w, t_list *files)
 			if ((int)ft_strlen(tmp) > w->max_nlink) w->max_nlink = ft_strlen(tmp);
 				free(tmp);
 			
-			/* FIX : Correction de st_size -> st_uid */
 			struct passwd *pw = getpwuid(f->statbuf->st_uid);
 			struct group *gw = getgrgid(f->statbuf->st_gid);
 			if (pw && (int)ft_strlen(pw->pw_name) > w->max_user) w->max_user = ft_strlen(pw->pw_name);
