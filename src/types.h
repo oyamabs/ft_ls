@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:02:20 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 17:05:14 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/30 18:48:48 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_file
 typedef struct s_file_tree
 {
 	char				*path;
+	struct stat			*statbuf;
 	t_list				*files;
 	t_list				*subdirectories;
 }	t_file_tree;

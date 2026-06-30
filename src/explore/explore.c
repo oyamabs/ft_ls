@@ -6,12 +6,13 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 15:46:13 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 15:48:05 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/30 18:49:59 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "explore.h"
 #include "../utils.h"
+#include <sys/stat.h>
 
 void	enter_directory(struct dirent *t, const char *name, t_file_tree *current)
 {
@@ -31,6 +32,14 @@ void	enter_directory(struct dirent *t, const char *name, t_file_tree *current)
 	{
 		t_file_tree	*new_branch;
 		new_branch = ft_calloc(sizeof(*new_branch), 1);
+		new_branch->statbuf = ft_calloc(sizeof(struct stat), 1);
+		if (lstat(name_buffer, new_branch->statbuf) < 0)
+		{
+			free(new_branch->statbuf);
+			free(new_branch);
+			free(name_buffer);
+			return ;
+		}
 		new_branch->path = ft_strdup(t->d_name);
 		ft_lstadd_back(&(current->subdirectories), ft_lstnew((t_file_tree *)new_branch));
 		recursively_explore(ddp, another, name_buffer, new_branch);
