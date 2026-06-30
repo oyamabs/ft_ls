@@ -6,13 +6,14 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/19 14:02:48 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/30 16:34:10 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/06/30 20:13:05 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
 #include "../libft/includes/libft.h"
 #include <dirent.h>
+#include <sys/stat.h>
 #include "utils.h"
 
 int	ft_strcasecmp_ls(const char *s1, const char *s2)
@@ -73,6 +74,54 @@ int	compare_ascii(void *content_a, void *content_b, bool isdir)
 		return ((int)ft_strlen(name_a) - (int)ft_strlen(name_b));
 
 	return (ft_strcasecmp_ls(name_a, name_b));
+}
+
+int	compare_time(void *content_a, void *content_b, bool isdir)
+{
+	long	sec_a = 0, nsec_a = 0;
+	long	sec_b = 0, nsec_b = 0;
+
+	if (!isdir)
+	{
+		t_file	*file_a = (t_file *)content_a;
+		t_file	*file_b = (t_file *)content_b;
+
+		if (file_a && file_a->statbuf)
+		{
+			sec_a = file_a->statbuf->st_mtim.tv_sec;
+			nsec_a = file_a->statbuf->st_mtim.tv_nsec;
+		}
+		if (file_b && file_b->statbuf)
+		{
+			sec_b = file_b->statbuf->st_mtim.tv_sec;
+			nsec_b = file_b->statbuf->st_mtim.tv_nsec;
+		}
+	}
+	else
+	{
+		t_file_tree	*tree_a = (t_file_tree *)content_a;
+		t_file_tree	*tree_b = (t_file_tree *)content_b;
+
+		if (tree_a && tree_a->statbuf)
+		{
+			sec_a = tree_a->statbuf->st_mtim.tv_sec;
+			nsec_a = tree_a->statbuf->st_mtim.tv_nsec;
+		}
+		if (tree_b && tree_b->statbuf)
+		{
+			sec_b = tree_b->statbuf->st_mtim.tv_sec;
+			nsec_b = tree_b->statbuf->st_mtim.tv_nsec;
+		}
+	}
+
+	// Comparaison temporelle : Plus récent d'abord (b avant a si b > a)
+	if (sec_a != sec_b)
+		return (sec_b > sec_a ? 1 : -1);
+	if (nsec_a != nsec_b)
+		return (nsec_b > nsec_a ? 1 : -1);
+
+	// Fallback : Si égalité parfaite, l'alphabet décide (gère . et .. naturellement ici)
+	return (compare_ascii(content_a, content_b, isdir));
 }
 
 void	swap(t_list *ptr, bool isdir)
