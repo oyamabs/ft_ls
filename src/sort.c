@@ -144,7 +144,7 @@ void	swap(t_list *ptr, bool isdir)
 	}
 }
 
-t_list	*part(t_list *head, t_list *end, bool isdir)
+t_list	*part(t_list *head, t_list *end, bool isdir, int (*cmp)(void *, void *, bool))
 {
 	t_list	*pivot = end;
 	t_list	*i = head;
@@ -153,7 +153,7 @@ t_list	*part(t_list *head, t_list *end, bool isdir)
 
 	while (j != end && j != NULL)
 	{
-		if (compare_ascii(j->content, pivot->content, isdir) < 0)
+		if (cmp(j->content, pivot->content, isdir) < 0)
 		{
 			tmp = i->content;
 			i->content = j->content;
@@ -168,56 +168,31 @@ t_list	*part(t_list *head, t_list *end, bool isdir)
 	return (i);
 }
 
-void	quicksort(t_list *files, t_list *end, bool isdir)
+void	quicksort(t_list *files, t_list *end, bool isdir, int (*cmp)(void *, void *, bool))
 {
 	if (!files || files == end || files == end->next)
 		return ;
-	t_list *pivot = part(files, end, isdir);
+	t_list *pivot = part(files, end, isdir, cmp);
 	t_list *prev = files;
 
 	if (pivot != files)
 	{
 		while (prev != NULL && prev->next != pivot)
 			prev = prev->next;
-		quicksort(files, prev, isdir);
+		quicksort(files, prev, isdir, cmp);
 	}
 
 	if (pivot != NULL && pivot->next != NULL)
-		quicksort(pivot->next, end, isdir);
+		quicksort(pivot->next, end, isdir, cmp);
 }
 
-void	sort_entries_alpha(t_list *files, bool isdir)
+void	sort_entries(t_list *files, bool isdir, int (*cmp)(void *, void *, bool))
 {
 	if (!files || !files->next)
 		return ;
 
 	t_list	*end = ft_lstlast(files);
-	quicksort(files, end, isdir);
-}
-
-void	sort_entries_reverse(t_list *files)
-{
-	bool	swapped;
-	t_list	*ptr1;
-
-	if (!files)
-		return ;
-	do
-	{
-		swapped = false;
-		ptr1 = files;
-		while (ptr1->next != NULL)
-		{
-			if (compare_ascii(ptr1->content, ptr1->next->content, false) < 0)
-			{
-				t_file *tmp = (t_file *)ptr1->content;
-				ptr1->content = ptr1->next->content;
-				ptr1->next->content = tmp;
-				swapped = true;
-			}
-			ptr1 = ptr1->next;
-		}
-	} while (swapped == true);
+	quicksort(files, end, isdir, cmp);
 }
 
 t_list	*reverse_list(t_list *lst)
@@ -260,10 +235,11 @@ void	sort_tree(t_file_tree *tree)
 {
 	if (!tree)
 		return ;
-	t_list *current_files = tree->files;
-	sort_entries_alpha(current_files, false);
+	if (tree->files && tree->files->next)
+		quicksort(tree->files, ft_lstlast(tree->files), false, compare_ascii);
+	if (tree->subdirectories && tree->subdirectories->next)
+		quicksort(tree->subdirectories, ft_lstlast(tree->subdirectories), true, compare_ascii);
 	t_list *current_branch = tree->subdirectories;
-	sort_entries_alpha(current_branch, true);
 	while (current_branch != NULL)
 	{
 		t_file_tree *sub_tree = current_branch->content;
