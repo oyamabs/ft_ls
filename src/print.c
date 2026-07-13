@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/07/13 16:55:07 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/07/13 17:16:08 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,22 @@ void	print_file_aligned(t_file *f, t_width w, char *time_str)
 	free(pad_size);
 }
 
+void	print_block_size(t_list *files)
+{
+	int total = 0;
+	t_list *current;
+
+	if (!files)
+		return;
+	current = files;
+	while (current)
+	{
+		total += (((t_file *)current->content)->statbuf->st_blocks / 2);
+		current = current->next;
+	}
+	ft_printf("Total: %d\n", total);
+}
+
 void print_file_tree(t_file_tree *tree, int level, t_width widths)
 {
 	static bool has_printed_before_newline = false;
@@ -141,6 +157,7 @@ void print_file_tree(t_file_tree *tree, int level, t_width widths)
 	t_list *current_file = tree->files;
 	if (current_file != NULL)
 		has_printed_before_newline = true;
+	print_block_size(current_file);
 	while (current_file != NULL)
 	{
 		t_file *file = (t_file *)current_file->content;
