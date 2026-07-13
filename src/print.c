@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/30 16:20:24 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/07/13 16:55:07 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,17 +126,26 @@ void	print_file_aligned(t_file *f, t_width w, char *time_str)
 
 void print_file_tree(t_file_tree *tree, int level, t_width widths)
 {
+	static bool has_printed_before_newline = false;
 	if (!tree)
 		return;
-
+	if (has_printed_before_newline && level > 0 && tree->files)
+	{
+		ft_printf("\n");
+		has_printed_before_newline = false;
+	}
+	if (level > 0)
+	{
+		ft_printf("%s:\n", tree->path);
+	}
 	t_list *current_file = tree->files;
+	if (current_file != NULL)
+		has_printed_before_newline = true;
 	while (current_file != NULL)
 	{
 		t_file *file = (t_file *)current_file->content;
 		if (file)
 		{
-			for (int i = 0; i < level; i++)
-				ft_printf("    ");
 			char	time_str[30];
 			time_t	now;
 			time_t	file_time;
@@ -169,9 +178,11 @@ void print_file_tree(t_file_tree *tree, int level, t_width widths)
 		t_file_tree *subtree = (t_file_tree *)current_sub->content;
 		if (subtree)
 		{
-			for (int i = 0; i < level; i++)
-				ft_printf("    ");
-			ft_printf("📁 [Dossier: %s]:\n", subtree->path);
+			if (has_printed_before_newline)
+			{
+				ft_printf("\n");
+				has_printed_before_newline = false;
+			}
 			print_file_tree(subtree, level + 1, widths);
 		}
 		current_sub = current_sub->next;
