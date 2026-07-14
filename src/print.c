@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/07/13 17:16:08 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/07/14 14:08:24 by freddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ void	print_block_size(t_list *files)
 		total += (((t_file *)current->content)->statbuf->st_blocks / 2);
 		current = current->next;
 	}
-	ft_printf("Total: %d\n", total);
+	ft_printf("total: %d\n", total);
 }
 
 void print_file_tree(t_file_tree *tree, int level, t_width widths)
