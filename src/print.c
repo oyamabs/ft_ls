@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/07/15 15:41:05 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/07/15 15:48:57 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*pad_left(char *str, int max_len)
 	return (res);
 }
 
-void	accumulate_widths(t_width *w, t_file_tree *tree)
+void	accumulate_widths(t_file_tree *tree)
 {
 	t_list	*current_file;
 	char *tmp;
@@ -66,6 +66,7 @@ void	accumulate_widths(t_width *w, t_file_tree *tree)
 	if (!tree)
 		return;
 	current_file = tree->files;
+	t_width *w = tree->width;
 	while (current_file != NULL)
 	{
 		t_file *f = (t_file *)current_file->content;
@@ -88,12 +89,12 @@ void	accumulate_widths(t_width *w, t_file_tree *tree)
 	while (current_sub != NULL)
 	{
 		t_file_tree *subtree = (t_file_tree *)current_sub->content;
-		accumulate_widths(w, subtree);
+		accumulate_widths(subtree);
 		current_sub = current_sub->next;
 	}
 }
 
-void	print_file_aligned(t_file *f, t_width w, char *time_str)
+void	print_file_aligned(t_file *f, t_width *w, char *time_str)
 {
 	struct passwd *passbuf = getpwuid(f->statbuf->st_uid);
 	struct group  *groupbuf = getgrgid(f->statbuf->st_gid);
@@ -101,13 +102,13 @@ void	print_file_aligned(t_file *f, t_width w, char *time_str)
 	char *g_name = (groupbuf) ? groupbuf->gr_name : "unknown";
 
 	char *s_nlink = ft_itoa(f->statbuf->st_nlink);
-	char *pad_nlink = pad_right(s_nlink, w.max_nlink);
+	char *pad_nlink = pad_right(s_nlink, w->max_nlink);
 
-	char *pad_user = pad_left(u_name, w.max_user);
-	char *pad_group = pad_left(g_name, w.max_group);
+	char *pad_user = pad_left(u_name, w->max_user);
+	char *pad_group = pad_left(g_name, w->max_group);
 
 	char *s_size = ft_itoa(f->statbuf->st_size);
-	char *pad_size = pad_right(s_size, w.max_size);
+	char *pad_size = pad_right(s_size, w->max_size);
 
 	if (f->points_to)
 	{
@@ -191,7 +192,7 @@ void print_file_tree(t_file_tree *tree, int level, t_width widths)
 				ft_memcpy(time_str, date_ctime + 4, 12);
 				time_str[12] = '\0';
 			}
-			print_file_aligned(file, widths, time_str);
+			print_file_aligned(file, tree->width, time_str);
 		}
 		current_file = current_file->next;
 	}

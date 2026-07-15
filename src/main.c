@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/07/15 15:36:26 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/07/15 15:46:07 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	main(int argc, char **argv)
 		trees[i] = ft_calloc(sizeof(*trees[i]), 1);
 		if (!trees[i])
 			exit(1); // dangerous ! OOOoooohhh! 👻👻👻
+		trees[i]->width = ft_calloc(sizeof(t_width), 1);
 		t_file_tree *current_tree = trees[i];
 		if (!dps[i])
 		{
@@ -68,7 +69,7 @@ int	main(int argc, char **argv)
 	while (i < args.number_of_files)
 	{
 		sort_tree(trees[i]);
-		accumulate_widths(&global_width, trees[i]);
+		accumulate_widths(trees[i]);
 		i++;
 	}
 	i = 0;

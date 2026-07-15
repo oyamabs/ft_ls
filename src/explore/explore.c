@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 15:46:13 by tchampio          #+#    #+#             */
-/*   Updated: 2026/07/13 16:27:32 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/07/15 15:46:59 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	enter_directory(struct dirent *t, const char *name, t_file_tree *current)
 		t_file_tree	*new_branch;
 		new_branch = ft_calloc(sizeof(*new_branch), 1);
 		new_branch->statbuf = ft_calloc(sizeof(struct stat), 1);
+		new_branch->width = ft_calloc(sizeof(t_width), 1);
 		if (lstat(name_buffer, new_branch->statbuf) < 0)
 		{
 			free(new_branch->statbuf);
