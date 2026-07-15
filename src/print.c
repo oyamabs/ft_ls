@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/07/14 14:18:57 by freddy           ###   ########.fr       */
+/*   Updated: 2026/07/15 15:41:05 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,32 +58,38 @@ char	*pad_left(char *str, int max_len)
 	return (res);
 }
 
-void    accumulate_widths(t_width *w, t_list *files)
+void	accumulate_widths(t_width *w, t_file_tree *tree)
 {
-	t_list    *current;
-	char    *tmp;
-	
-	if (!w || !files)
-		return ;
-	current = files;
-	while (current != NULL)
+	t_list	*current_file;
+	char *tmp;
+
+	if (!tree)
+		return;
+	current_file = tree->files;
+	while (current_file != NULL)
 	{
-		t_file    *f = (t_file *)current->content;
+		t_file *f = (t_file *)current_file->content;
 		if (f && f->statbuf)
 		{
 			tmp = ft_itoa(f->statbuf->st_nlink);
 			if ((int)ft_strlen(tmp) > w->max_nlink) w->max_nlink = ft_strlen(tmp);
 				free(tmp);
-			
 			struct passwd *pw = getpwuid(f->statbuf->st_uid);
-			struct group *gw = getgrgid(f->statbuf->st_gid);
+			struct group *grp = getgrgid(f->statbuf->st_gid);
 			if (pw && (int)ft_strlen(pw->pw_name) > w->max_user) w->max_user = ft_strlen(pw->pw_name);
-			if (gw && (int)ft_strlen(gw->gr_name) > w->max_group) w->max_group = ft_strlen(gw->gr_name);
+			if (grp && (int)ft_strlen(grp->gr_name) > w->max_group) w->max_group = ft_strlen(grp->gr_name);
 			tmp = ft_itoa(f->statbuf->st_size);
 			if ((int)ft_strlen(tmp) > w->max_size) w->max_size = ft_strlen(tmp);
 			free(tmp);
 		}
-		current = current->next;
+		current_file = current_file->next;
+	}
+	t_list *current_sub = tree->subdirectories;
+	while (current_sub != NULL)
+	{
+		t_file_tree *subtree = (t_file_tree *)current_sub->content;
+		accumulate_widths(w, subtree);
+		current_sub = current_sub->next;
 	}
 }
 

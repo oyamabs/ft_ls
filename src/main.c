@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/07/13 16:57:11 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/07/15 15:36:26 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	main(int argc, char **argv)
 	while (i < args.number_of_files)
 	{
 		sort_tree(trees[i]);
-		accumulate_widths(&global_width, trees[i]->files);
+		accumulate_widths(&global_width, trees[i]);
 		i++;
 	}
 	i = 0;
