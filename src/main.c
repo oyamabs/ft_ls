@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 20:04:40 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 20:13:26 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	main(int argc, char **argv)
 	t_file_tree		**trees;
 	t_file_tree		*individual_files;
 	t_width			global_width;
+	bool			has_printed_newline_after_single_files;
 
 	init_arguments(&args, argc, argv);
 	i = 0;
@@ -85,12 +86,16 @@ int	main(int argc, char **argv)
 	}
 	i = 0;
 	print_file_tree(individual_files, -2, global_width, args);
-	if (individual_files->files && trees[0]->files)
-		ft_printf("\n");
+	if (individual_files->files)
+		has_printed_newline_after_single_files = true;
 	while (i < args.number_of_files)
 	{
 		if (trees[i]->path && (args.number_of_files > 1 || args.flags & (1 << ARG_RECURSIVE)))
+		{
+			if (has_printed_newline_after_single_files)
+				ft_printf("\n");
 			ft_printf("%s:\n", trees[i]->path);
+		}
 		print_file_tree(trees[i], 0, global_width, args);
 		i++;
 	}
