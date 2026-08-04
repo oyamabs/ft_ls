@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 14:30:52 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 16:07:51 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ int	main(int argc, char **argv)
 			closedir(dps[i]);
 		i++;
 	}
+	free_tree(individual_files);
+	free(individual_files);
 	free(dps);
 	free(trees);
 }
