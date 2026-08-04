@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 22:05:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/30 14:53:15 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 00:16:53 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	init_arguments(t_arguments *arguments, int ac, char **av)
 	filenum = 0;
 	current_ac = 1;
 	ft_bzero(arguments, sizeof(*arguments));
+	arguments->flags = check_flags_arguments(ac, av);
 	while (current_ac < ac)
 	{
 		if (av[current_ac][0] != '-')
@@ -62,6 +63,5 @@ void	init_arguments(t_arguments *arguments, int ac, char **av)
 		perror("ft_ls");
 		exit(1);
 	}
-	arguments->flags = check_flags_arguments(ac, av);
 	copy_filenames(arguments, ac, av);
 }

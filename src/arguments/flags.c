@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 19:42:47 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/04 21:22:53 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 00:14:43 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,8 @@ void	double_dash_args(char *argv, t_flags *args)
 {
 	if (!ft_strncmp(argv, "--all", 5))
 		*args |= 1 << ARG_HIDDEN;
-	if (!ft_strncmp(argv, "--list", 6))
-		*args |= 1 << ARG_LIST;
 	if (!ft_strncmp(argv, "--recursive", 11))
 		*args |= 1 << ARG_RECURSIVE;
-	if (!ft_strncmp(argv, "--time", 6))
-		*args |= 1 << ARG_TIME;
 	if (!ft_strncmp(argv, "--reverse", 9))
 		*args |= 1 << ARG_REVERSE;
 }
@@ -38,6 +34,11 @@ void	single_dash_args(char *argv, t_flags *args)
 	i = 1;
 	while (i < arglen)
 	{
+		if (ft_strchr("-alrtR", argv[i]) == NULL)
+		{
+			write(2, "ft_ls: Invalid argument\n", 25);
+			exit(1);
+		}
 		if (argv[i] == 'a')
 			*args |= 1 << ARG_HIDDEN;
 		if (argv[i] == 'l')
