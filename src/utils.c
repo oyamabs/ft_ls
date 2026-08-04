@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/29 16:49:06 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 23:40:26 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ t_file	*init_file(struct dirent *dirent, const char *path, bool is_individual_fi
 	{
 		free(to_return->ent);
 		free(full_path);
+		free(to_return->path);
 		free(to_return);
 		return (NULL);
 	}
@@ -149,6 +150,7 @@ t_file	*init_file(struct dirent *dirent, const char *path, bool is_individual_fi
 	{
 		free(to_return->ent);
 		free(to_return->statbuf);
+		free(to_return->path);
 		free(full_path);
 		free(to_return);
 		return (NULL);
@@ -163,6 +165,7 @@ t_file	*init_file(struct dirent *dirent, const char *path, bool is_individual_fi
 			free(to_return->ent);
 			free(to_return->statbuf);
 			free(to_return->points_to);
+		free(to_return->path);
 			free(full_path);
 			free(to_return);
 			return (NULL);
