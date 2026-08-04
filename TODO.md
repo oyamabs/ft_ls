@@ -9,6 +9,6 @@
 - [x] Sort tree
 - [x] make the reverse of the tree for -r
 - [ ] make different kinds of prints depending on the arguments
-- [ ] Show data
+- [x] Show data
 - [ ] write more tests
 - [ ] profit
