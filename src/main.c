@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/05 01:25:44 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 01:30:45 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,17 @@ int	main(int argc, char **argv)
 	ft_bzero(&global_width, sizeof(global_width));
 	while (i < args.number_of_files)
 	{
+		bool is_symlink = is_link_slash(args.filenames[i]);
+
+		if (is_symlink)
+		{
+			t_file *individual_file = init_file(NULL, args.filenames[i], true);
+			ft_lstadd_back(&(individual_files->files), ft_lstnew((t_file *)individual_file));
+			dps[i] = NULL;
+			i++;
+			continue ;
+		}
+	
 		dps[i] = opendir(args.filenames[i]);
 		trees[i] = ft_calloc(sizeof(*trees[i]), 1);
 		if (!trees[i])

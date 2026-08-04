@@ -6,13 +6,25 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 15:46:13 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 19:36:41 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 01:19:57 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "explore.h"
 #include "../utils.h"
 #include <sys/stat.h>
+
+bool	is_link_slash(const char *full_path)
+{
+	struct stat statbuf;
+	bool res = false;
+
+	if (lstat(full_path, &statbuf) < 0)
+		return (false);
+	if (S_ISLNK(statbuf.st_mode))
+		res = true;
+	return (res);
+}
 
 void	enter_directory(struct dirent *t, const char *name, t_file_tree *current)
 {
@@ -27,6 +39,11 @@ void	enter_directory(struct dirent *t, const char *name, t_file_tree *current)
 	ft_strlcat(name_buffer, name, 1000);
 	ft_strlcat(name_buffer, "/", 1000);
 	ft_strlcat(name_buffer, t->d_name, 1000);
+	if (is_link_slash(name_buffer))
+	{
+		free(name_buffer);
+		return ;
+	}
 	ddp = opendir(name_buffer);
 	if (!errno)
 	{

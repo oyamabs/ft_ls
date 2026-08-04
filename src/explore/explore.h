@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 15:47:30 by tchampio          #+#    #+#             */
-/*   Updated: 2026/05/20 12:53:04 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 01:01:40 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,6 @@
 
 void	enter_directory(struct dirent *t, const char *name, t_file_tree *tree);
 void	recursively_explore(DIR *dp, struct dirent *t, const char *name, t_file_tree *tree);
+bool	is_link_slash(const char *full_path);
 
 #endif // EXPLORE_H
