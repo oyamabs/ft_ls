@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 19:20:48 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 20:04:40 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	main(int argc, char **argv)
 		if (!dps[i])
 		{
 			t_file *individual_file = init_file(NULL, args.filenames[i], true);
-			// ft_lstadd_back(&(current_tree->files), ft_lstnew((t_file *)individual_file));
 			ft_lstadd_back(&(individual_files->files), ft_lstnew((t_file *)individual_file));
 			i++;
 			continue ;
@@ -86,7 +85,7 @@ int	main(int argc, char **argv)
 	}
 	i = 0;
 	print_file_tree(individual_files, -2, global_width, args);
-	if (individual_files->files)
+	if (individual_files->files && trees[0]->files)
 		ft_printf("\n");
 	while (i < args.number_of_files)
 	{
