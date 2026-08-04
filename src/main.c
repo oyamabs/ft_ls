@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 16:15:09 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 19:20:48 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,16 @@ int	main(int argc, char **argv)
 	}
 	i = 0;
 	ft_bzero(&global_width, sizeof(global_width));
-	sort_tree(individual_files);
-	accumulate_widths(individual_files);
+	sort_tree(individual_files, args);
+	if (args.flags & (1 << ARG_REVERSE))
+		reverse_tree(individual_files);
+	accumulate_widths(individual_files, args);
 	while (i < args.number_of_files)
 	{
-		sort_tree(trees[i]);
-		accumulate_widths(trees[i]);
+		sort_tree(trees[i], args);
+		if (args.flags & (1 << ARG_REVERSE))
+			reverse_tree(trees[i]);
+		accumulate_widths(trees[i], args);
 		i++;
 	}
 	i = 0;
@@ -86,7 +90,7 @@ int	main(int argc, char **argv)
 		ft_printf("\n");
 	while (i < args.number_of_files)
 	{
-		if (trees[i]->path)
+		if (trees[i]->path && (args.number_of_files > 1 || args.flags & (1 << ARG_RECURSIVE)))
 			ft_printf("%s:\n", trees[i]->path);
 		print_file_tree(trees[i], 0, global_width, args);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/19 14:02:48 by tchampio          #+#    #+#             */
-/*   Updated: 2026/06/30 20:13:05 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 17:35:44 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,19 +231,28 @@ void	reverse_tree(t_file_tree *tree)
 	}
 }
 
-void	sort_tree(t_file_tree *tree)
+void	make_good_sort(t_arguments args, t_list *sorting, bool isdir)
+{
+	if (args.flags & (1 << ARG_TIME))
+		quicksort(sorting, ft_lstlast(sorting), isdir, compare_time);
+	else
+		quicksort(sorting, ft_lstlast(sorting), isdir, compare_ascii);
+}
+
+void	sort_tree(t_file_tree *tree, t_arguments args)
 {
 	if (!tree)
 		return ;
 	if (tree->files && tree->files->next)
-		quicksort(tree->files, ft_lstlast(tree->files), false, compare_ascii);
+		make_good_sort(args, tree->files, false);
 	if (tree->subdirectories && tree->subdirectories->next)
-		quicksort(tree->subdirectories, ft_lstlast(tree->subdirectories), true, compare_ascii);
+		make_good_sort(args, tree->subdirectories, true);
+		//quicksort(tree->subdirectories, ft_lstlast(tree->subdirectories), true, compare_ascii);
 	t_list *current_branch = tree->subdirectories;
 	while (current_branch != NULL)
 	{
 		t_file_tree *sub_tree = current_branch->content;
-		sort_tree(sub_tree);
+		sort_tree(sub_tree, args);
 		current_branch = current_branch->next;
 	}
 }

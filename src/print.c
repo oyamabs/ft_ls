@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 17:17:57 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 19:37:00 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include "../libft/includes/libft.h"
+#include "utils.h"
 
 char	*pad_right(char *str, int max_len)
 {
@@ -34,7 +35,8 @@ char	*pad_right(char *str, int max_len)
 	if (!res)
 		return (NULL);
 	ft_memset(res, ' ', spaces_needed);
-	ft_strlcat(res, str, max_len + 1);
+	ft_memcpy(res + spaces_needed, str, len);
+	res[max_len] = '\0';
 	return (res);
 }
 
@@ -49,16 +51,18 @@ char	*pad_left(char *str, int max_len)
 	res = ft_calloc(sizeof(char), max_len + 1);
 	if (!res)
 		return (NULL);
-	ft_strlcat(res, str, max_len + 1);
-	while (len < max_len)
-	{
-		res[len] = ' ';
-		len++;
-	}
+	ft_memcpy(res, str, len);
+	ft_memset(res + len, ' ', max_len - len);
+	res[max_len] = '\0';
+	// while (len < max_len)
+	// {
+	// 	res[len] = ' ';
+	// 	len++;
+	// }
 	return (res);
 }
 
-void	accumulate_widths(t_file_tree *tree)
+void	accumulate_widths(t_file_tree *tree, t_arguments args)
 {
 	t_list	*current_file;
 	char *tmp;
@@ -67,11 +71,17 @@ void	accumulate_widths(t_file_tree *tree)
 		return;
 	current_file = tree->files;
 	t_width *w = tree->width;
+	ft_bzero(w, sizeof(*w));
 	while (current_file != NULL)
 	{
 		t_file *f = (t_file *)current_file->content;
 		if (f && f->statbuf)
 		{
+			if (f->path[0] == '.' && (args.flags & (1 << ARG_HIDDEN)) == 0)
+			{
+				current_file = current_file->next;
+				continue;
+			}
 			tmp = ft_itoa(f->statbuf->st_nlink);
 			if ((int)ft_strlen(tmp) > w->max_nlink) w->max_nlink = ft_strlen(tmp);
 				free(tmp);
@@ -89,7 +99,7 @@ void	accumulate_widths(t_file_tree *tree)
 	while (current_sub != NULL)
 	{
 		t_file_tree *subtree = (t_file_tree *)current_sub->content;
-		accumulate_widths(subtree);
+		accumulate_widths(subtree, args);
 		current_sub = current_sub->next;
 	}
 }
@@ -227,6 +237,11 @@ void print_file_tree(t_file_tree *tree, int level, t_width widths, t_arguments a
 		while (current_sub != NULL)
 		{
 			t_file_tree *subtree = (t_file_tree *)current_sub->content;
+			if (subtree->name[0] == '.' && (arguments.flags & (1 << ARG_HIDDEN)) == 0)
+			{
+				current_sub = current_sub->next;
+				continue;
+			}
 			if (subtree)
 			{
 				if (has_printed_before_newline)

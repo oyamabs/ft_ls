@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 14:08:28 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 16:14:53 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 19:20:35 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@ t_file	*init_file(struct dirent *dirent, const char *path, bool is_individual_fi
 void	print_file(t_file *f);
 void	print_file_tree(t_file_tree *tree, int level, t_width global_width, t_arguments arguments);
 char	*ft_basename(char *name);
-void    accumulate_widths(t_file_tree *tree);
+void    accumulate_widths(t_file_tree *tree, t_arguments args);
 
 #endif // UTILS_H
