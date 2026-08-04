@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 20:13:26 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 01:25:44 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,66 @@
 #include "utils.h"
 #include "free.h"
 #include "sort.h"
+
+void	clean_file_list(t_list **files_head)
+{
+	t_list	**curr;
+	t_list	*to_del;
+	t_file	*file;
+
+	if (!files_head || !*files_head)
+		return ;
+
+	curr = files_head;
+	while (*curr != NULL)
+	{
+		file = (t_file *)(*curr)->content;
+		if (!file || !file->statbuf)
+		{
+			to_del = *curr;
+			*curr = (*curr)->next;
+			ft_lstdelone(to_del, free_file);
+		}
+		else
+			curr = &((*curr)->next);
+	}
+}
+
+void	clean_tree(t_file_tree *tree)
+{
+	t_list	*current_sub;
+
+	if (!tree)
+		return ;
+
+	clean_file_list(&(tree->files));
+	current_sub = tree->subdirectories;
+	while (current_sub != NULL)
+	{
+		t_file_tree *subtree = (t_file_tree *)current_sub->content;
+		clean_tree(subtree);
+		current_sub = current_sub->next;
+	}
+}
+
+void	check_and_clean_trees(t_file_tree *individual_files, t_file_tree **trees, int number_of_files)
+{
+	int	i;
+
+	if (individual_files)
+		clean_tree(individual_files);
+
+	if (trees)
+	{
+		i = 0;
+		while (i < number_of_files)
+		{
+			if (trees[i])
+				clean_tree(trees[i]);
+			i++;
+		}
+	}
+}
 
 int	main(int argc, char **argv)
 {
@@ -71,6 +131,7 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	i = 0;
+	check_and_clean_trees(individual_files, trees, args.number_of_files);
 	ft_bzero(&global_width, sizeof(global_width));
 	sort_tree(individual_files, args);
 	if (args.flags & (1 << ARG_REVERSE))
