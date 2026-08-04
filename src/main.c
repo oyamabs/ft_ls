@@ -151,13 +151,17 @@ int	main(int argc, char **argv)
 		has_printed_newline_after_single_files = true;
 	while (i < args.number_of_files)
 	{
-		if (trees[i]->path && (args.number_of_files > 1 || args.flags & (1 << ARG_RECURSIVE)))
+		if (trees[i] && trees[i]->path && (args.number_of_files > 1 || args.flags & (1 << ARG_RECURSIVE)))
 		{
 			if (has_printed_newline_after_single_files)
+			{
 				ft_printf("\n");
+				has_printed_newline_after_single_files = false;
+			}
 			ft_printf("%s:\n", trees[i]->path);
 		}
 		print_file_tree(trees[i], 0, global_width, args);
+		has_printed_newline_after_single_files = true;
 		i++;
 	}
 	free(args.filenames);
