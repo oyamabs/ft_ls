@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 19:37:00 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 23:04:31 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,6 @@ char	*pad_left(char *str, int max_len)
 	ft_memcpy(res, str, len);
 	ft_memset(res + len, ' ', max_len - len);
 	res[max_len] = '\0';
-	// while (len < max_len)
-	// {
-	// 	res[len] = ' ';
-	// 	len++;
-	// }
 	return (res);
 }
 
