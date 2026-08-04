@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/07/15 15:46:07 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 14:30:52 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	main(int argc, char **argv)
 	DIR				**dps;
 	struct dirent	*direc;
 	t_file_tree		**trees;
+	t_file_tree		*individual_files;
 	t_width			global_width;
 
 	init_arguments(&args, argc, argv);
@@ -38,6 +39,10 @@ int	main(int argc, char **argv)
 	dps = ft_calloc(sizeof(*dps), args.number_of_files);
 	if (!dps)
 		return (free(trees), 1);
+	individual_files = ft_calloc(sizeof(*individual_files), 1);
+	individual_files->width = ft_calloc(sizeof(t_width), 1);
+	individual_files->is_individual_files = true;
+	ft_bzero(&global_width, sizeof(global_width));
 	while (i < args.number_of_files)
 	{
 		dps[i] = opendir(args.filenames[i]);
@@ -49,7 +54,8 @@ int	main(int argc, char **argv)
 		if (!dps[i])
 		{
 			t_file *individual_file = init_file(NULL, args.filenames[i], true);
-			ft_lstadd_back(&(current_tree->files), ft_lstnew((t_file *)individual_file));
+			// ft_lstadd_back(&(current_tree->files), ft_lstnew((t_file *)individual_file));
+			ft_lstadd_back(&(individual_files->files), ft_lstnew((t_file *)individual_file));
 			i++;
 			continue ;
 		}
@@ -66,6 +72,8 @@ int	main(int argc, char **argv)
 	}
 	i = 0;
 	ft_bzero(&global_width, sizeof(global_width));
+	sort_tree(individual_files);
+	accumulate_widths(individual_files);
 	while (i < args.number_of_files)
 	{
 		sort_tree(trees[i]);
@@ -73,9 +81,13 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	i = 0;
+	print_file_tree(individual_files, -2, global_width);
+	if (individual_files->files)
+		ft_printf("\n");
 	while (i < args.number_of_files)
 	{
-		ft_printf("%s:\n", trees[i]->path);
+		if (trees[i]->path)
+			ft_printf("%s:\n", trees[i]->path);
 		print_file_tree(trees[i], 0, global_width);
 		i++;
 	}

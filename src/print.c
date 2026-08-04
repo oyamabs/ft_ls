@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/07/15 15:48:57 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 14:31:27 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,8 @@ void print_file_tree(t_file_tree *tree, int level, t_width widths)
 	t_list *current_file = tree->files;
 	if (current_file != NULL)
 		has_printed_before_newline = true;
-	print_block_size(current_file);
+	if (!tree->is_individual_files)
+		print_block_size(current_file);
 	while (current_file != NULL)
 	{
 		t_file *file = (t_file *)current_file->content;
