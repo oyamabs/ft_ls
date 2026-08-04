@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 23:04:31 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 23:11:57 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	accumulate_widths(t_file_tree *tree, t_arguments args)
 		t_file *f = (t_file *)current_file->content;
 		if (f && f->statbuf)
 		{
+
 			if (f->path[0] == '.' && (args.flags & (1 << ARG_HIDDEN)) == 0)
 			{
 				current_file = current_file->next;
@@ -185,14 +186,18 @@ void	do_right_print(t_arguments args, t_file *file, t_file_tree *tree)
 		}
 		if (file->path[0] != '.')
 			print_file_aligned(file, tree->width, time_str);
-		if (file->path[0] == '.' && args.flags & (1 << ARG_HIDDEN))
+		else if (tree->is_individual_files)
+			print_file_aligned(file, tree->width, time_str);
+		else if (file->path[0] == '.' && args.flags & (1 << ARG_HIDDEN))
 			print_file_aligned(file, tree->width, time_str);
 	}
 	else
 	{
 		if (file->path[0] != '.')
 			ft_printf("%s\n", file->path);
-		if (file->path[0] == '.' && args.flags & (1 << ARG_HIDDEN))
+		else if (tree->is_individual_files)
+			ft_printf("%s\n", file->path);
+		else if (file->path[0] == '.' && args.flags & (1 << ARG_HIDDEN))
 			ft_printf("%s\n", file->path);
 	}
 }
