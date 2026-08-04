@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 16:07:51 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 16:15:09 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,14 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	i = 0;
-	print_file_tree(individual_files, -2, global_width);
+	print_file_tree(individual_files, -2, global_width, args);
 	if (individual_files->files)
 		ft_printf("\n");
 	while (i < args.number_of_files)
 	{
 		if (trees[i]->path)
 			ft_printf("%s:\n", trees[i]->path);
-		print_file_tree(trees[i], 0, global_width);
+		print_file_tree(trees[i], 0, global_width, args);
 		i++;
 	}
 	free(args.filenames);

@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 14:31:27 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 17:17:57 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void	print_file_aligned(t_file *f, t_width *w, char *time_str)
 	free(pad_size);
 }
 
-void	print_block_size(t_list *files)
+void	print_block_size(t_list *files, t_arguments args)
 {
 	int total = 0;
 	t_list *current;
@@ -141,13 +141,58 @@ void	print_block_size(t_list *files)
 	current = files;
 	while (current)
 	{
+		if (((t_file *)current->content)->path[0] == '.' && (args.flags & (1 << ARG_HIDDEN)) == 0)
+		{
+			current = current->next;
+			continue ;
+		}
 		total += (((t_file *)current->content)->statbuf->st_blocks / 2);
 		current = current->next;
 	}
 	ft_printf("total %d\n", total);
 }
 
-void print_file_tree(t_file_tree *tree, int level, t_width widths)
+void	do_right_print(t_arguments args, t_file *file, t_file_tree *tree)
+{
+	if (args.flags & (1 << ARG_LIST))
+	{
+		char	time_str[30];
+		time_t	now;
+		time_t	file_time;
+		char	*date_ctime;
+		
+		file_time = file->statbuf->st_mtim.tv_sec;
+		date_ctime = ctime(&file_time);
+		time(&now);
+		
+		if ((now - file_time) > 15778800 || (file_time - now) > 15778800)
+		{
+			ft_memcpy(time_str, date_ctime + 4, 7);
+			time_str[6] = ' ';
+			time_str[7] = ' ';
+			ft_memcpy(time_str + 8, date_ctime + 20, 4);
+			time_str[12] = '\0';
+		}
+		else
+		{
+			ft_memcpy(time_str, date_ctime + 4, 12);
+			time_str[12] = '\0';
+		}
+		if (file->path[0] != '.')
+			print_file_aligned(file, tree->width, time_str);
+		if (file->path[0] == '.' && args.flags & (1 << ARG_HIDDEN))
+			print_file_aligned(file, tree->width, time_str);
+	}
+	else
+	{
+		if (file->path[0] != '.')
+			ft_printf("%s\n", file->path);
+		if (file->path[0] == '.' && args.flags & (1 << ARG_HIDDEN))
+			ft_printf("%s\n", file->path);
+	}
+}
+
+void print_file_tree(t_file_tree *tree, int level, t_width widths, t_arguments arguments)
 {
 	static bool has_printed_before_newline = false;
 	if (!tree)
@@ -164,52 +209,34 @@ void print_file_tree(t_file_tree *tree, int level, t_width widths)
 	t_list *current_file = tree->files;
 	if (current_file != NULL)
 		has_printed_before_newline = true;
-	if (!tree->is_individual_files)
-		print_block_size(current_file);
+	if (arguments.flags & (1 << ARG_LIST))
+	{
+		if (!tree->is_individual_files)
+			print_block_size(current_file, arguments);
+	}
 	while (current_file != NULL)
 	{
 		t_file *file = (t_file *)current_file->content;
 		if (file)
-		{
-			char	time_str[30];
-			time_t	now;
-			time_t	file_time;
-			char	*date_ctime;
-			
-			file_time = file->statbuf->st_mtim.tv_sec;
-			date_ctime = ctime(&file_time);
-			time(&now);
-			
-			if ((now - file_time) > 15778800 || (file_time - now) > 15778800)
-			{
-				ft_memcpy(time_str, date_ctime + 4, 7);
-				time_str[6] = ' ';
-				time_str[7] = ' ';
-				ft_memcpy(time_str + 8, date_ctime + 20, 4);
-				time_str[12] = '\0';
-			}
-			else
-			{
-				ft_memcpy(time_str, date_ctime + 4, 12);
-				time_str[12] = '\0';
-			}
-			print_file_aligned(file, tree->width, time_str);
-		}
+			do_right_print(arguments, file, tree);
 		current_file = current_file->next;
 	}
-	t_list *current_sub = tree->subdirectories;
-	while (current_sub != NULL)
+	if (arguments.flags & (1 << ARG_RECURSIVE))
 	{
-		t_file_tree *subtree = (t_file_tree *)current_sub->content;
-		if (subtree)
+		t_list *current_sub = tree->subdirectories;
+		while (current_sub != NULL)
 		{
-			if (has_printed_before_newline)
+			t_file_tree *subtree = (t_file_tree *)current_sub->content;
+			if (subtree)
 			{
-				ft_printf("\n");
-				has_printed_before_newline = false;
+				if (has_printed_before_newline)
+				{
+					ft_printf("\n");
+					has_printed_before_newline = false;
+				}
+				print_file_tree(subtree, level + 1, widths, arguments);
 			}
-			print_file_tree(subtree, level + 1, widths);
+			current_sub = current_sub->next;
 		}
-		current_sub = current_sub->next;
 	}
 }
