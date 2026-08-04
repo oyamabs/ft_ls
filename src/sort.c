@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/19 14:02:48 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 17:35:44 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/04 23:22:50 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ int	ft_strcasecmp_ls(const char *s1, const char *s2)
 
 	while (s1[i] || s2[j])
 	{
-		while (s1[i] == '-' || s1[i] == '_' || (i == 0 && s1[i] == '.' && s1[i + 1] != '\0'))
+		while (s1[i] == '-' || s1[i] == '_' || s1[i] == '/' || (i == 0 && s1[i] == '.' && s1[i + 1] != '\0'))
 			i++;
-		while (s2[j] == '-' || s2[j] == '_' || (j == 0 && s2[j] == '.' && s2[j + 1] != '\0'))
+		while (s2[j] == '-' || s2[j] == '_' || s2[j] == '/' || (j == 0 && s2[j] == '.' && s2[j + 1] != '\0'))
 			j++;
 		char c1 = ft_tolower((unsigned int)s1[i]);
 		char c2 = ft_tolower((unsigned int)s2[j]);
@@ -55,8 +55,8 @@ int	compare_ascii(void *content_a, void *content_b, bool isdir)
 		t_file	*a = (t_file *)content_a;
 		t_file	*b = (t_file *)content_b;
 
-		name_a = (a->ent) ? a->ent->d_name : ft_basename(a->path);
-		name_b = (b->ent) ? b->ent->d_name : ft_basename(b->path);
+		name_a = (a->ent) ? a->ent->d_name : a->path;
+		name_b = (b->ent) ? b->ent->d_name : b->path;
 	}
 	else
 	{
