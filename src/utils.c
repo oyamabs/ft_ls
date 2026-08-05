@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 23:40:26 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 13:37:10 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,9 @@ t_file	*init_file(struct dirent *dirent, const char *path, bool is_individual_fi
 			free(to_return);
 			return (NULL);
 		}
-		to_return->ent = ft_memcpy(to_return->ent, dirent, sizeof(*dirent));
+		to_return->ent->d_ino = dirent->d_ino;
+		to_return->ent->d_type = dirent->d_type;
+		ft_strlcpy(to_return->ent->d_name, dirent->d_name, sizeof(dirent->d_name));
 		to_return->path = ft_strdup(dirent->d_name);
 
 		full_path = ft_calloc(sizeof(char), 1000);
