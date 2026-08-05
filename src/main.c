@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/05 01:30:45 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 13:17:50 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	main(int argc, char **argv)
 	t_file_tree		**trees;
 	t_file_tree		*individual_files;
 	t_width			global_width;
-	bool			has_printed_newline_after_single_files;
+	bool			has_printed_newline_after_single_files = true;
 
 	init_arguments(&args, argc, argv);
 	i = 0;
