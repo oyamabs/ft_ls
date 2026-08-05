@@ -8,7 +8,7 @@
 - [x] Create a tree (for recursivity sake)
 - [x] Sort tree
 - [x] make the reverse of the tree for -r
-- [ ] make different kinds of prints depending on the arguments
+- [x] make different kinds of prints depending on the arguments
 - [x] Show data
-- [ ] write more tests
-- [ ] profit
+- [x] write more tests
+- [x] profit
