@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SGOINFRE_USR=/sgoinfre/goinfre/Perso/tchampio/Public/usr/bin
+
 rm -rf /goinfre/$USER/failed_tests
 mkdir -p /goinfre/$USER/failed_tests
 
@@ -106,8 +108,8 @@ do_test "multi_mixed_time" -lt src README.md Makefile
 
 echo "Doing benchmark with hyperfine."
 echo "Benchmarking (./ft_)ls -laR ."
-/sgoinfre/goinfre/Perso/tchampio/Private/.cargo/bin/hyperfine "./ft_ls -laR ."
-/sgoinfre/goinfre/Perso/tchampio/Private/.cargo/bin/hyperfine "ls -laR ."
+$SGOINFRE_USR/hyperfine "./ft_ls -laR ."
+$SGOINFRE_USR/hyperfine "ls -laR ."
 echo "Benchmarking (./ft_)ls -laR .."
-/sgoinfre/goinfre/Perso/tchampio/Private/.cargo/bin/hyperfine "./ft_ls -laR .."
-/sgoinfre/goinfre/Perso/tchampio/Private/.cargo/bin/hyperfine "ls -laR .."
+$SGOINFRE_USR/hyperfine "./ft_ls -laR .."
+$SGOINFRE_USR/hyperfine "ls -laR .."
