@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/05 13:17:50 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 15:14:32 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	main(int argc, char **argv)
 	t_file_tree		**trees;
 	t_file_tree		*individual_files;
 	t_width			global_width;
-	bool			has_printed_newline_after_single_files = true;
+	bool			has_printed_newline_after_single_files = false;
 
 	init_arguments(&args, argc, argv);
 	i = 0;
@@ -141,13 +141,13 @@ int	main(int argc, char **argv)
 			free(args.filenames[i]);
 		i++;
 	}
-	i = 0;
 	check_and_clean_trees(individual_files, trees, args.number_of_files);
 	ft_bzero(&global_width, sizeof(global_width));
 	sort_tree(individual_files, args);
 	if (args.flags & (1 << ARG_REVERSE))
 		reverse_tree(individual_files);
 	accumulate_widths(individual_files, args);
+	i = 0;
 	while (i < args.number_of_files)
 	{
 		sort_tree(trees[i], args);
