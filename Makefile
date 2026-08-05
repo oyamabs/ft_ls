@@ -4,7 +4,7 @@ CC = cc
 # https://github.com/google/sanitizers/wiki/AddressSanitizer
 SANITIZERS = -fsanitize=address,undefined -fno-omit-frame-pointer
 ifeq ($(CFLAGS),)
-	CFLAGS = -Wall -Wextra -Werror -g
+	CFLAGS = -Wall -Wextra -Werror -g -O3
 endif
 IFLAGS = -I./libft
 
