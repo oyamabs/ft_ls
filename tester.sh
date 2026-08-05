@@ -65,6 +65,8 @@ do_test "mixed_flags_ltaRr" -ltaRr
 # do_test "simple_time_fa" --time # same lol
 do_test "single_file" "" README.md
 do_test "single_file_six_month_old" "" /sgoinfre/goinfre/Perso/tchampio/Public/ft_ls/six_month_file
+do_test "single_file_six_month_future" "" /sgoinfre/goinfre/Perso/tchampio/Public/ft_ls/future_more
+do_test "single_file_less_six_month_future" "" /sgoinfre/goinfre/Perso/tchampio/Public/ft_ls/future_less
 do_test "multiple_files" "" README.md ft_ls
 do_test "multiple_files_six_month_old" "" README.md /sgoinfre/goinfre/Perso/tchampio/Public/ft_ls/six_month_file
 do_test "file_and_directory" "" README.md src
@@ -101,3 +103,11 @@ do_test "dir_empty_la" -la empty_dir
 
 # --- MULTI-ARGUMENTS ORDERING ---
 do_test "multi_mixed_time" -lt src README.md Makefile
+
+echo "Doing benchmark with hyperfine."
+echo "Benchmarking (./ft_)ls -laR ."
+/sgoinfre/goinfre/Perso/tchampio/Private/.cargo/bin/hyperfine "./ft_ls -laR ."
+/sgoinfre/goinfre/Perso/tchampio/Private/.cargo/bin/hyperfine "ls -laR ."
+echo "Benchmarking (./ft_)ls -laR .."
+/sgoinfre/goinfre/Perso/tchampio/Private/.cargo/bin/hyperfine "./ft_ls -laR .."
+/sgoinfre/goinfre/Perso/tchampio/Private/.cargo/bin/hyperfine "ls -laR .."
