@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:02:20 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 19:34:17 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 17:33:02 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct s_file_tree
 	t_list				*files;
 	t_list				*subdirectories;
 	bool				is_individual_files;
+	bool				no_access;
 }	t_file_tree;
 
 #endif // TYPES_H

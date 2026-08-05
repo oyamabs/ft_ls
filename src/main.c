@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 14:49:59 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/05 15:14:32 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 18:06:00 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 #include "types.h"
 #include "arguments/arguments.h"
 #include "explore/explore.h"
+#include <errno.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
 #include "utils.h"
 #include "free.h"
 #include "sort.h"
+#include <stdio.h>
+#include <sys/stat.h>
 
 void	clean_file_list(t_list **files_head)
 {
@@ -117,7 +119,35 @@ int	main(int argc, char **argv)
 			continue ;
 		}
 	
+		errno = 0;
 		dps[i] = opendir(args.filenames[i]);
+		if (errno == EACCES)
+		{
+			char buff[10000] = { 0 };
+			ft_strlcat(buff, PROGNAME, 10000);
+			ft_strlcat(buff, ": cannot open directory '", 10000);
+			ft_strlcat(buff, args.filenames[i], 10000);
+			ft_strlcat(buff, "'", 10000);
+			perror(buff);
+			i++;
+			continue ;
+		}
+		errno = 0;
+		struct stat statbuf;
+		if (lstat(args.filenames[i], &statbuf) < 0)
+		{
+			if (errno == ENOENT)
+			{
+				char buff[10000] = { 0 };
+				ft_strlcat(buff, PROGNAME, 10000);
+				ft_strlcat(buff, ": cannot access '", 10000);
+				ft_strlcat(buff, args.filenames[i], 10000);
+				ft_strlcat(buff, "'", 10000);
+				perror(buff);
+			}
+			i++;
+			continue ;
+		}
 		trees[i] = ft_calloc(sizeof(*trees[i]), 1);
 		if (!trees[i])
 			exit(1); // dangerous ! OOOoooohhh! 👻👻👻
@@ -125,6 +155,7 @@ int	main(int argc, char **argv)
 		t_file_tree *current_tree = trees[i];
 		if (!dps[i])
 		{
+			errno = 0;
 			t_file *individual_file = init_file(NULL, args.filenames[i], true);
 			ft_lstadd_back(&(individual_files->files), ft_lstnew((t_file *)individual_file));
 			i++;
@@ -169,7 +200,8 @@ int	main(int argc, char **argv)
 				ft_printf("\n");
 				has_printed_newline_after_single_files = false;
 			}
-			ft_printf("%s:\n", trees[i]->path);
+			if (trees[i]->files)
+				ft_printf("%s:\n", trees[i]->path);
 		}
 		print_file_tree(trees[i], 0, global_width, args);
 		has_printed_newline_after_single_files = true;

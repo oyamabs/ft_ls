@@ -6,19 +6,22 @@
 /*   By: tchampio <tchampio@student.42lehavre.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 16:04:17 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/05 13:37:10 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 17:31:44 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
 #include <dirent.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
 #include <pwd.h>
 #include <grp.h>
+#include <stdio.h>
 #include "../libft/includes/libft.h"
+#include "utils.h"
 
 /*
    man inode(7)
@@ -147,9 +150,19 @@ t_file	*init_file(struct dirent *dirent, const char *path, bool is_individual_fi
 		free(to_return);
 		return (NULL);
 	}
+	errno = 0;
 	int lstatres = lstat(full_path, to_return->statbuf);
 	if (lstatres < 0)
 	{
+		if (errno == EACCES)
+		{
+			char buff[10000] = { 0 };
+			ft_strlcat(buff, PROGNAME, 10000);
+			ft_strlcat(buff, ": cannot access '", 10000);
+			ft_strlcat(buff, full_path, 10000);
+			ft_strlcat(buff, "'", 10000);
+			perror(buff);
+		}
 		free(to_return->ent);
 		free(to_return->statbuf);
 		free(to_return->path);
@@ -167,7 +180,7 @@ t_file	*init_file(struct dirent *dirent, const char *path, bool is_individual_fi
 			free(to_return->ent);
 			free(to_return->statbuf);
 			free(to_return->points_to);
-		free(to_return->path);
+			free(to_return->path);
 			free(full_path);
 			free(to_return);
 			return (NULL);

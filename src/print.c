@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 16:44:29 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 23:11:57 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 16:24:40 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ void	do_right_print(t_arguments args, t_file *file, t_file_tree *tree)
 		date_ctime = ctime(&file_time);
 		time(&now);
 		
-		if ((now - file_time) > 15778800 || (file_time - now) > 15778800)
+		if ((now - file_time) > 15778800 || (file_time) > /* 15778800 */ now)
 		{
 			ft_memcpy(time_str, date_ctime + 4, 7);
 			time_str[6] = ' ';
