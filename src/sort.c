@@ -6,7 +6,7 @@
 /*   By: tchampio <tchampio@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/19 14:02:48 by tchampio          #+#    #+#             */
-/*   Updated: 2026/08/04 23:22:50 by tchampio         ###   ########.fr       */
+/*   Updated: 2026/08/05 15:11:01 by tchampio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,22 @@ int	ft_strcasecmp_ls(const char *s1, const char *s2)
 
 	while (s1[i] || s2[j])
 	{
-		while (s1[i] == '-' || s1[i] == '_' || s1[i] == '/' || (i == 0 && s1[i] == '.' && s1[i + 1] != '\0'))
+		while (s1[i] == '-' || s1[i] == '_' || s1[i] == '/' || s1[i] == '.')
 			i++;
-		while (s2[j] == '-' || s2[j] == '_' || s2[j] == '/' || (j == 0 && s2[j] == '.' && s2[j + 1] != '\0'))
+		while (s2[j] == '-' || s2[j] == '_' || s2[j] == '/' || s2[j] == '.')
 			j++;
+		if (!s1[i] || !s2[j])
+			break ;
+
 		char c1 = ft_tolower((unsigned int)s1[i]);
 		char c2 = ft_tolower((unsigned int)s2[j]);
 		if (c1 != c2)
 			return (c1 - c2);
-		if (s1[i]) i++;
-		if (s2[j]) j++;
+		i++;
+		j++;
 	}
+	if (s1[i] || s2[j])
+		return ((unsigned char)s1[i] - (unsigned char)s2[j]);
 
 	return (ft_strncmp(s1, s2, 256));
 }
